@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+
+# Environment variables
+.env
+
+# Database
+*.db
+
+# Uploaded user files
+uploads/
+
+# ChromaDB
+data/chroma/
+
+# IDE
+.vscode/
+.idea/
