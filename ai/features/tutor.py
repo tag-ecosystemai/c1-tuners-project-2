@@ -11,6 +11,7 @@ def answer_question(store, question, course_id=None):
     )
 
     chunks = results["documents"][0]
+    metadatas = results["metadatas"][0]
 
     context = "\n\n".join(chunks)
 
@@ -28,6 +29,18 @@ Rules:
 - Do not repeat the term being defined inside its own definition.
 
 Answer:"""
+
     answer = generate_response(prompt)
+
+    sources = []
+
+    for metadata in metadatas:
+        document_name = metadata.get("document_name")
+
+        if document_name and document_name not in sources:
+            sources.append(document_name)
+
+    if sources:
+        answer += "\n\nSource: " + ", ".join(sources)
 
     return answer

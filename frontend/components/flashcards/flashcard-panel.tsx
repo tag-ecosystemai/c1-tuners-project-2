@@ -1,0 +1,98 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { getFlashcards } from "@/lib/api";
+import { mockFlashcards } from "@/lib/mock-data";
+import type { Flashcard } from "@/types";
+
+const RATINGS = [
+  { key: "again", label: "Again" },
+  { key: "hard", label: "Hard" },
+  { key: "good", label: "Good" },
+  { key: "easy", label: "Easy" },
+] as const;
+
+export function FlashcardPanel({ courseId }: { courseId: string }) {
+  const [cards, setCards] = useState<Flashcard[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [usingMockData, setUsingMockData] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+
+  useEffect(() => {
+    getFlashcards(courseId)
+      .then((data) => setCards(data.length ? data : mockFlashcards))
+      .catch(() => {
+        setUsingMockData(true);
+        setCards(mockFlashcards);
+      })
+      .finally(() => setLoading(false));
+  }, [courseId]);
+
+  if (loading) return <p className="text-sm text-ink-muted">Generating flashcards…</p>;
+  if (cards.length === 0) return <p className="text-sm text-ink-muted">No flashcards yet.</p>;
+
+  const card = cards[index];
+  const isLast = index === cards.length - 1;
+
+  const next = () => {
+    setFlipped(false);
+    if (!isLast) setIndex(index + 1);
+  };
+
+  return (
+    <div className="flex flex-col items-center">
+      {usingMockData && (
+        <div className="mb-4 inline-block rounded-full bg-amber/15 px-3 py-1 text-xs text-amber-dark">
+          Sample flashcards — backend not connected yet
+        </div>
+      )}
+
+      <p className="mb-4 text-sm text-ink-muted">
+        {index + 1} / {cards.length}
+      </p>
+
+      <div
+        onClick={() => setFlipped(!flipped)}
+        className="h-64 w-full max-w-md cursor-pointer"
+        style={{ perspective: "1000px" }}
+      >
+        <div
+          className="relative h-full w-full transition-transform duration-500"
+          style={{
+            transformStyle: "preserve-3d",
+            transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+          }}
+        >
+          <div
+            className="absolute inset-0 flex items-center justify-center rounded-2xl border border-border bg-cream-card p-8 text-center shadow-sm"
+            style={{ backfaceVisibility: "hidden" }}
+          >
+            <p className="font-serif text-xl text-ink">{card.front}</p>
+          </div>
+          <div
+            className="absolute inset-0 flex items-center justify-center rounded-2xl border border-border bg-forest p-8 text-center text-white shadow-sm"
+            style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+          >
+            <p className="text-sm">{card.back}</p>
+          </div>
+        </div>
+      </div>
+
+      <p className="mt-3 text-xs text-ink-muted">Tap the card to flip</p>
+
+      <div className="mt-6 flex gap-2">
+        {RATINGS.map((r) => (
+          <button
+            key={r.key}
+            onClick={next}
+            disabled={!flipped}
+            className="rounded-full border border-border px-4 py-2 text-sm text-ink hover:bg-forest-light disabled:opacity-40"
+          >
+            {r.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
