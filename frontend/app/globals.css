@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+:root {
+  /* Core palette — matches the established sabilearn brand:
+     forest green sidebar, warm cream background, amber accent */
+  --color-forest: #14432f;
+  --color-forest-dark: #0d3021;
+  --color-forest-light: #e8f0ea;
+
+  --color-cream: #faf6ee;
+  --color-cream-card: #ffffff;
+
+  --color-amber: #d99a5b;
+  --color-amber-dark: #c2823f;
+
+  --color-ink: #201f1a;
+  --color-ink-muted: #6b6a62;
+
+  --color-border: #e7e1d4;
+
+  --color-danger: #b3442f;
+  --color-success: #3f6b4f;
+
+  --background: var(--color-cream);
+  --foreground: var(--color-ink);
+}
+
+@theme inline {
+  --color-forest: var(--color-forest);
+  --color-forest-dark: var(--color-forest-dark);
+  --color-forest-light: var(--color-forest-light);
+  --color-cream: var(--color-cream);
+  --color-cream-card: var(--color-cream-card);
+  --color-amber: var(--color-amber);
+  --color-amber-dark: var(--color-amber-dark);
+  --color-ink: var(--color-ink);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-border: var(--color-border);
+  --color-danger: var(--color-danger);
+  --color-success: var(--color-success);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-fraunces);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  border-color: var(--color-border);
+}
