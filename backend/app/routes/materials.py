@@ -6,6 +6,7 @@ import shutil
 from app.database import SessionLocal
 from app.models.course import Course
 from app.models.material import Material
+from ai.ingestion.pipeline import ingest_document
 
 router = APIRouter(
     prefix="/materials",
@@ -51,6 +52,13 @@ def upload_material(
     db.add(material)
     db.commit()
     db.refresh(material)
+
+    ingest_document(
+    file_path=file_path,
+    course_id=course_id,
+    document_id=material.id,
+    document_name=file.filename
+)
 
     return {
         "message": "Material uploaded successfully",
