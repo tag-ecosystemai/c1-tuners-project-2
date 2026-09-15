@@ -1,17 +1,18 @@
 # Building the pdf loader
 
-from pypdf import PdfReader
+import pymupdf
 
 def load_pdf(file_path):
-    reader = PdfReader(file_path)
+    doc = pymupdf.open(file_path)
 
     text = ""
 
-    for page in reader.pages:
-        page_text = page.extract_text()
+    for page in doc:
+        page_text = page.get_text()
 
         if page_text:
             text += page_text + "\n"
 
-    return text
+    doc.close()
 
+    return text

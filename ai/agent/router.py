@@ -36,9 +36,23 @@ Respond ONLY with valid JSON in this exact format:
 
     result = generate_response(prompt, json_mode=True)
 
-    course_id = result.get("course_id")
+    raw_course_id = result.get("course_id")
 
-    if course_id == "unknown" or course_id is None:
+    if raw_course_id is None:
         return None
 
-    return course_id
+    raw_course_id = str(raw_course_id).strip().lower()
+
+    if raw_course_id == "unknown":
+        return None
+
+    valid_ids = {c["course_id"].lower(): c["course_id"] for c in courses}
+    valid_names = {c["name"].lower(): c["course_id"] for c in courses}
+
+    if raw_course_id in valid_ids:
+        return valid_ids[raw_course_id]
+
+    if raw_course_id in valid_names:
+        return valid_names[raw_course_id]
+
+    return None
