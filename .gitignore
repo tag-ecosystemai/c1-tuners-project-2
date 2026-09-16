@@ -15,10 +15,12 @@ venv/
 
 # Uploaded user files
 uploads/
+backend/uploads/
 
 # ChromaDB
 data/chroma/
 ai/data/chroma/
+backend/data/chroma/
 
 # IDE
 .vscode/

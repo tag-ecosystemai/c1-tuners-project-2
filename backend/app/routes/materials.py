@@ -6,7 +6,7 @@ import shutil
 from app.database import SessionLocal
 from app.models.course import Course
 from app.models.material import Material
-from ai.ingestion.pipeline import ingest_document
+from ai.ingestion.pipeline import ingest_file
 
 router = APIRouter(
     prefix="/materials",
@@ -53,7 +53,7 @@ def upload_material(
     db.commit()
     db.refresh(material)
 
-    ingest_document(
+    ingest_file(
     file_path=file_path,
     course_id=course_id,
     document_id=material.id,
