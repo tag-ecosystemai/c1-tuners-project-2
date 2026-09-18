@@ -5,6 +5,9 @@ from app.models.material import Material
 from app.routes.courses import router as courses_router
 from app.routes.materials import router as materials_router
 from app.routes.ask import router as ask_router
+from app.routes.quiz import router as quiz_router
+from app.routes.flashcards import router as flashcards_router
+from app.routes.study_agent import router as study_agent_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -14,6 +17,9 @@ app = FastAPI()
 app.include_router(courses_router)
 app.include_router(materials_router)
 app.include_router(ask_router)
+app.include_router(quiz_router)
+app.include_router(flashcards_router)
+app.include_router(study_agent_router)
 
 
 @app.get("/")
