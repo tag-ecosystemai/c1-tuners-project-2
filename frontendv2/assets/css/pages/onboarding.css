@@ -1,0 +1,242 @@
+/* =========================================================
+   ONBOARDING
+   ========================================================= */
+
+.onboard-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.onboard-header {
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.onboard-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.onboard-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-border);
+  transition: background-color 0.2s ease, width 0.2s ease;
+}
+.onboard-dot.is-active {
+  background: var(--color-primary);
+  width: 22px;
+  border-radius: var(--radius-pill);
+}
+.onboard-dot.is-done {
+  background: var(--color-primary);
+  opacity: 0.5;
+}
+
+.onboard-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px 60px;
+}
+
+.onboard-card {
+  width: 100%;
+  max-width: 560px;
+}
+
+.onboard-step {
+  display: none;
+}
+.onboard-step.is-active {
+  display: block;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.onboard-step-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--color-primary-tint);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin: 0 auto 24px;
+}
+
+.onboard-center {
+  text-align: center;
+}
+
+.onboard-step h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+.onboard-step-sub {
+  color: var(--color-text-muted);
+  font-size: 15px;
+  margin-bottom: 32px;
+}
+.onboard-center .onboard-step-sub {
+  max-width: 380px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.option-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  background: var(--color-surface);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.option-chip:hover {
+  border-color: var(--color-text-faint);
+}
+.option-chip input {
+  accent-color: var(--color-primary);
+}
+.option-chip.is-selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-tint);
+}
+
+.option-other {
+  margin-top: 4px;
+  margin-bottom: 24px;
+}
+
+/* Courses step */
+.course-list {
+  margin-bottom: 16px;
+}
+.course-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+}
+.course-row-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+.course-row-remove {
+  background: none;
+  border: none;
+  color: var(--color-text-faint);
+  font-size: 13px;
+  font-weight: 600;
+}
+.course-row-remove:hover {
+  color: var(--color-warn-text);
+}
+
+.add-course-form {
+  display: none;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.add-course-form.is-open {
+  display: block;
+}
+.add-course-form .field {
+  margin-bottom: 12px;
+}
+.add-course-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.course-empty-note {
+  font-size: 13px;
+  color: var(--color-warn-text);
+  margin-top: -6px;
+  margin-bottom: 16px;
+  display: none;
+}
+.course-empty-note.is-visible {
+  display: block;
+}
+
+/* Study time step */
+.time-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+/* Review step */
+.review-block {
+  border-top: 1px solid var(--color-border);
+  padding: 16px 0;
+}
+.review-block:first-child {
+  border-top: none;
+}
+.review-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+.review-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Nav buttons */
+.onboard-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.onboard-skip {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+.onboard-skip:hover {
+  color: var(--color-text);
+}
+
+@media (max-width: 560px) {
+  .option-grid, .time-options { grid-template-columns: 1fr; }
+}

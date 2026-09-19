@@ -1,0 +1,63 @@
+/* =========================================================
+   STUDY
+   ========================================================= */
+
+.study-setup {
+  max-width: 620px;
+  margin: 40px auto;
+  text-align: center;
+}
+.study-setup h1 {
+  font-size: 28px;
+  margin: 16px 0 8px;
+}
+.study-setup p {
+  color: var(--color-text-muted);
+  font-size: 15px;
+  margin-bottom: 32px;
+}
+.study-setup-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--color-primary-tint);
+  color: var(--color-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+.study-picker {
+  text-align: left;
+  margin-bottom: 20px;
+}
+.study-picker label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.study-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.study-chip {
+  padding: 10px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.study-chip.is-selected {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: var(--color-primary);
+}
+.study-session-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}

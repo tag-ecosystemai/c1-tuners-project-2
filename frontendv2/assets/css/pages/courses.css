@@ -1,0 +1,356 @@
+/* =========================================================
+   MY COURSES + COURSE WORKSPACE
+   ========================================================= */
+
+.courses-header {
+  margin-bottom: 28px;
+}
+.courses-header h1 {
+  font-size: 30px;
+  margin-bottom: 4px;
+}
+.courses-header p {
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.course-card-progress {
+  margin-top: 16px;
+}
+.course-card-progress-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--color-text-faint);
+  margin-bottom: 6px;
+}
+
+/* ---- Course Workspace header ---- */
+.workspace-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.workspace-header h1 {
+  font-size: 30px;
+  margin: 10px 0 6px;
+}
+.workspace-header .meta {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.progress-ring-lg-wrap {
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px 24px;
+}
+.progress-ring-lg-wrap .label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-faint);
+  margin-bottom: 6px;
+}
+.progress-ring-lg {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 4px;
+  display: block;
+}
+.progress-ring-lg-value {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* ---- Tabs ---- */
+.workspace-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 28px;
+}
+.workspace-tab {
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-bottom: 2px solid transparent;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+.workspace-tab.is-active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.workspace-pane {
+  display: none;
+}
+.workspace-pane.is-active {
+  display: block;
+}
+
+/* ---- Materials tab ---- */
+.materials-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+.materials-toolbar h3 {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+.materials-toolbar p {
+  font-size: 13.5px;
+  color: var(--color-text-muted);
+}
+.materials-toolbar-actions {
+  display: flex;
+  gap: 10px;
+  flex: none;
+}
+
+/* ---- Overview tab ---- */
+.overview-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+.topic-mastery-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border);
+  font-size: 14px;
+}
+.topic-mastery-row:first-of-type {
+  border-top: none;
+}
+.topic-mastery-track {
+  flex: 1;
+  margin: 0 16px;
+  height: 6px;
+  background: var(--color-badge-bg);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+.topic-mastery-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+}
+
+/* ---- Quiz / Flashcard list items (inside course tabs) ---- */
+.list-item-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+}
+.list-item-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.list-item-meta {
+  font-size: 12.5px;
+  color: var(--color-text-faint);
+}
+
+@media (max-width: 900px) {
+  .course-grid { grid-template-columns: 1fr; }
+  .overview-grid { grid-template-columns: 1fr; }
+  .workspace-tabs { overflow-x: auto; }
+}
+
+/* ---- Course header menu ---- */
+.workspace-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.header-menu-wrap {
+  position: relative;
+}
+.header-menu-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 16px;
+}
+.header-menu-dropdown {
+  display: none;
+  position: absolute;
+  top: 46px;
+  right: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-raised);
+  padding: 8px;
+  min-width: 180px;
+  z-index: 10;
+}
+.header-menu-dropdown.is-open { display: block; }
+.header-menu-dropdown button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 9px 12px;
+  font-size: 14px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--color-text);
+}
+.header-menu-dropdown button:hover { background: var(--color-surface-alt); }
+.header-menu-dropdown button.is-danger { color: var(--color-warn-text); }
+
+/* ---- Overview tab extras ---- */
+.continue-mini-card {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border-radius: var(--radius-lg);
+  padding: 22px 26px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.continue-mini-card h4 {
+  color: var(--color-on-primary);
+  font-size: 17px;
+  margin-bottom: 4px;
+}
+.continue-mini-card p {
+  color: rgba(255,253,249,0.75);
+  font-size: 13px;
+}
+.continue-mini-card .btn-primary {
+  background: var(--color-on-primary);
+  color: var(--color-primary);
+}
+
+.overview-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.overview-stat {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  text-align: center;
+}
+.overview-stat .value {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 20px;
+}
+.overview-stat .label {
+  font-size: 11.5px;
+  color: var(--color-text-faint);
+  margin-top: 2px;
+}
+
+.recommended-card {
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+.recommended-card .eyebrow { margin-bottom: 10px; }
+.recommended-card h4 { font-size: 15px; margin-bottom: 4px; }
+.recommended-card p { font-size: 13px; color: var(--color-text-muted); margin-bottom: 14px; }
+
+.empty-course-block {
+  text-align: center;
+  padding: 60px 20px;
+}
+.empty-course-block .icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: var(--color-primary-tint); color: var(--color-primary);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 18px;
+}
+.empty-course-block h3 { font-size: 19px; margin-bottom: 8px; }
+.empty-course-block p { color: var(--color-text-muted); font-size: 14px; max-width: 380px; margin: 0 auto 20px; }
+
+/* ---- Add New Course ---- */
+.add-course-page {
+  max-width: 480px;
+  margin: 40px auto;
+}
+.add-course-page .card {
+  padding: 36px;
+}
+.add-course-page h1 {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+.add-course-page .sub {
+  color: var(--color-text-muted);
+  font-size: 14px;
+  margin-bottom: 26px;
+}
+.duplicate-warning {
+  display: none;
+  background: var(--color-warn-bg);
+  color: var(--color-warn-text);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 13.5px;
+  margin-bottom: 16px;
+}
+.duplicate-warning.is-visible { display: block; }
+.duplicate-warning .actions { display: flex; gap: 10px; margin-top: 10px; }
+.course-ready-icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  background: var(--color-primary-tint); color: var(--color-primary);
+  display: flex; align-items: center; justify-content: center; font-size: 24px;
+  margin: 0 auto 18px;
+}
+
+/* ---- Material row action menu ---- */
+.material-card { position: relative; }
+.material-menu-btn {
+  background: none; border: none; color: var(--color-text-faint); font-size: 16px; padding: 4px;
+}
+.material-menu-dropdown {
+  display: none; position: absolute; top: 44px; right: 12px;
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-raised); padding: 6px; min-width: 170px; z-index: 10;
+}
+.material-menu-dropdown.is-open { display: block; }
+.material-menu-dropdown button {
+  display: block; width: 100%; text-align: left; padding: 8px 10px; font-size: 13.5px;
+  background: none; border: none; border-radius: 8px; color: var(--color-text);
+}
+.material-menu-dropdown button:hover { background: var(--color-surface-alt); }

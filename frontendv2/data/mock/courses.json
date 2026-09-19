@@ -1,0 +1,82 @@
+{
+  "courses": [
+    {
+      "id": "csc301",
+      "code": "CSC 301",
+      "title": "Artificial Intelligence",
+      "instructor": "Dr. Amina Yusuf",
+      "description": "Learn the fundamentals of AI, machine learning and intelligent systems.",
+      "materialsCount": 12,
+      "progress": 68,
+      "color": "green",
+      "quizzesCompleted": 6,
+      "flashcardsReviewed": 148,
+      "studyTime": "5h 20m",
+      "continueTopic": "Neural Networks",
+      "recentActivity": [
+        "Completed Machine Learning quiz",
+        "Studied Neural Networks",
+        "Reviewed 20 flashcards",
+        "Added Deep Learning notes"
+      ],
+      "topics": [
+        { "name": "Search Strategies", "mastery": 92 },
+        { "name": "Knowledge Representation", "mastery": 81 },
+        { "name": "Machine Learning", "mastery": 73 },
+        { "name": "Neural Networks", "mastery": 51 },
+        { "name": "Backpropagation", "mastery": 42 },
+        { "name": "Convolutional Neural Networks", "mastery": 61 }
+      ]
+    },
+    {
+      "id": "mth201",
+      "code": "MTH 201",
+      "title": "Differential Equations",
+      "instructor": "Prof. Chukwuemeka Okafor",
+      "description": "Ordinary differential equations, series solutions, and Laplace transforms.",
+      "materialsCount": 8,
+      "progress": 54,
+      "color": "orange",
+      "quizzesCompleted": 3,
+      "flashcardsReviewed": 62,
+      "studyTime": "2h 40m",
+      "continueTopic": "Laplace Transforms",
+      "recentActivity": [
+        "Completed First-Order Equations quiz",
+        "Studied Laplace Transforms",
+        "Reviewed 9 flashcards"
+      ],
+      "topics": [
+        { "name": "First-Order Equations", "mastery": 78 },
+        { "name": "Second-Order Equations", "mastery": 65 },
+        { "name": "Laplace Transforms", "mastery": 44 },
+        { "name": "Series Solutions", "mastery": 39 }
+      ]
+    },
+    {
+      "id": "phy201",
+      "code": "PHY 201",
+      "title": "Mechanics",
+      "instructor": "Dr. Tunde Balogun",
+      "description": "Kinematics, Newton's laws, energy, and rotational motion.",
+      "materialsCount": 6,
+      "progress": 81,
+      "color": "blue",
+      "quizzesCompleted": 5,
+      "flashcardsReviewed": 90,
+      "studyTime": "3h 10m",
+      "continueTopic": "Rotational Motion",
+      "recentActivity": [
+        "Completed Mechanics quiz",
+        "Studied Rotational Motion",
+        "Reviewed 14 flashcards"
+      ],
+      "topics": [
+        { "name": "Kinematics", "mastery": 95 },
+        { "name": "Newton's Laws", "mastery": 88 },
+        { "name": "Work & Energy", "mastery": 74 },
+        { "name": "Rotational Motion", "mastery": 68 }
+      ]
+    }
+  ]
+}

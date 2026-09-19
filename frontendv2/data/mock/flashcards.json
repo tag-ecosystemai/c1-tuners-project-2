@@ -1,0 +1,76 @@
+{
+  "decks": [
+    {
+      "id": "neural-networks-deck",
+      "courseId": "csc301",
+      "courseCode": "CSC 301",
+      "title": "Neural Networks",
+      "dueCount": 8,
+      "totalCards": 12,
+      "cards": [
+        {
+          "q": "What does a neuron calculate?",
+          "a": "A weighted sum of its inputs plus a bias, passed through an activation function."
+        },
+        {
+          "q": "What is backpropagation?",
+          "a": "The algorithm that computes how much each weight contributed to the error, so weights can be updated to reduce it."
+        },
+        {
+          "q": "What is an activation function for?",
+          "a": "It introduces non-linearity so the network can model complex relationships."
+        },
+        {
+          "q": "What is a learning rate?",
+          "a": "A value that controls how big each weight update step is during training."
+        },
+        {
+          "q": "What is overfitting?",
+          "a": "When a model fits the training data too closely and fails to generalize to new data."
+        }
+      ],
+      "lastReviewed": "2 days ago",
+      "progress": 42
+    },
+    {
+      "id": "search-strategies-deck",
+      "courseId": "csc301",
+      "courseCode": "CSC 301",
+      "title": "Search Strategies",
+      "dueCount": 0,
+      "totalCards": 10,
+      "cards": [
+        {
+          "q": "What is breadth-first search?",
+          "a": "A search strategy that explores all nodes at the current depth before moving deeper."
+        },
+        {
+          "q": "What is heuristic search?",
+          "a": "A search strategy that uses an estimate of cost to reach the goal to guide exploration."
+        }
+      ],
+      "lastReviewed": "1 week ago",
+      "progress": 90
+    },
+    {
+      "id": "differential-equations-deck",
+      "courseId": "mth201",
+      "courseCode": "MTH 201",
+      "title": "First-Order Equations",
+      "dueCount": 5,
+      "totalCards": 9,
+      "cards": [
+        {
+          "q": "What makes an equation separable?",
+          "a": "It can be rearranged so each variable appears only on one side with its own differential."
+        },
+        {
+          "q": "What is an integrating factor?",
+          "a": "A function multiplied through a linear ODE to make the left-hand side an exact derivative."
+        }
+      ],
+      "lastReviewed": "3 days ago",
+      "progress": 55
+    }
+  ]
+}

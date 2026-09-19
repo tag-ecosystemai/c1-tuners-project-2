@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/home.css">
+<link rel="stylesheet" href="../../assets/css/pages/courses.css">
+<link rel="stylesheet" href="../../assets/css/pages/progress.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="progress">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+      <div class="progress-header">
+        <h1>Progress</h1>
+        <p>What the system has learned about how you're doing.</p>
+      </div>
+
+      <div class="stat-grid" id="stat-grid"></div>
+
+      <div class="progress-grid">
+        <div class="card">
+          <h3 style="font-size:18px; margin-bottom:16px;">Course progress</h3>
+          <div id="course-progress-list"></div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:18px; margin-bottom:16px;">Topic mastery (weakest first)</h3>
+          <div id="topic-mastery-list"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:18px; margin-bottom:16px;">AI Insights</h3>
+        <div id="insights-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/pages/progress.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "today": [
+    { "title": "Review Backpropagation", "course": "CSC 301", "duration": "15 min", "type": "review", "done": false, "reason": "Your recent quiz performance shows this topic needs more practice.", "link": "../study/study-session.html?course=csc301&topic=Backpropagation" },
+    { "title": "Targeted Quiz — Neural Networks", "course": "CSC 301", "duration": "12 min", "type": "quiz", "done": false, "reason": "A short quiz to check how well the Backpropagation review sticks.", "link": "../quizzes/quiz-taking.html?quiz=neural-networks-quiz&course=csc301" },
+    { "title": "Flashcard Review", "course": "CSC 301", "duration": "10 min", "type": "flashcards", "done": true, "reason": "8 cards were due for review today.", "link": "../flashcards/flashcard-study.html?deck=neural-networks-deck&course=csc301" },
+    { "title": "Learn Convolutional Neural Networks", "course": "CSC 301", "duration": "20 min", "type": "review", "done": false, "reason": "The next topic in your course sequence, building on Neural Networks.", "link": "../study/study-session.html?course=csc301&topic=Convolutional%20Neural%20Networks" }
+  ],
+  "thisWeek": [
+    { "title": "Practice Integration", "course": "MTH 201", "duration": "20 min", "day": "Tomorrow" },
+    { "title": "Review Laplace Transforms", "course": "MTH 201", "duration": "15 min", "day": "Wednesday" },
+    { "title": "Rotational Motion Quiz", "course": "PHY 201", "duration": "12 min", "day": "Thursday" }
+  ],
+  "upcoming": [
+    { "title": "MTH 201 Exam prep block", "course": "MTH 201", "duration": "1 hour", "day": "22 Sept" },
+    { "title": "Full CSC 301 topic review", "course": "CSC 301", "duration": "45 min", "day": "25 Sept" }
+  ]
+}

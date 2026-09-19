@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/flashcards.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="flashcards">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+      <div id="fc-root" style="max-width:640px; margin:0 auto;"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/flashcard-engine.js"></script>
+<script>
+document.addEventListener('sabilearn:shell-ready', async () => {
+  const params = new URLSearchParams(window.location.search);
+  const deckId = params.get('deck') || 'neural-networks-deck';
+  const courseParam = params.get('course');
+
+  const data = await fetch('../../data/mock/flashcards.json').then(r => r.json());
+  const deck = data.decks.find(d => d.id === deckId) || data.decks[0];
+
+  const backLabel = courseParam ? `Back to ${deck.courseCode}` : 'Back to Flashcards';
+  const backHref = courseParam ? `../courses/course.html?course=${courseParam}&tab=flashcards` : 'flashcards.html';
+
+  initFlashcardStudy(document.getElementById('fc-root'), deck, { backLabel, backHref });
+});
+</script>
+</body>
+</html>

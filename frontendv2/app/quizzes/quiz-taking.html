@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/quizzes.css">
+<link rel="stylesheet" href="../../assets/css/pages/courses.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="quizzes">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+      <div id="quiz-root" style="max-width:720px; margin:0 auto;"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/quiz-engine.js"></script>
+<script>
+document.addEventListener('sabilearn:shell-ready', async () => {
+  const params = new URLSearchParams(window.location.search);
+  const quizId = params.get('quiz') || 'neural-networks-quiz';
+  const courseParam = params.get('course');
+
+  const data = await fetch('../../data/mock/quizzes.json').then(r => r.json());
+  const quiz = data.quizzes.find(q => q.id === quizId) || data.quizzes[0];
+
+  const backLabel = courseParam ? `Back to ${quiz.courseCode}` : 'Back to Quizzes';
+  const backHref = courseParam ? `../courses/course.html?course=${courseParam}&tab=quizzes` : 'quizzes.html';
+
+  initQuizTaking(document.getElementById('quiz-root'), quiz, { backLabel, backHref });
+});
+</script>
+</body>
+</html>

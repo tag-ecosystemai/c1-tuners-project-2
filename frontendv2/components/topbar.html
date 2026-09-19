@@ -1,0 +1,22 @@
+<div class="topbar-search">
+  <span class="topbar-search-icon">🔍</span>
+  <input type="text" placeholder="Search courses, notes, or topics">
+</div>
+
+<div class="topbar-actions">
+  <button class="topbar-icon-btn" id="notif-toggle" aria-label="Notifications" style="position:relative;">
+    🔔<span id="notif-badge" class="notif-badge" style="display:none;"></span>
+  </button>
+  <div class="topbar-user" id="user-menu-toggle">
+    <span class="sidebar-user-avatar" style="width:30px; height:30px; font-size:12px;">JA</span>
+    <span class="topbar-user-name">John</span>
+    <span style="font-size:11px; color:var(--color-text-faint);">⌄</span>
+  </div>
+
+  <div class="topbar-user-dropdown" id="user-menu-dropdown">
+    <a href="{{APP_ROOT}}account/profile-settings.html">Profile</a>
+    <a href="{{APP_ROOT}}account/notification-settings.html">Notifications</a>
+    <a href="{{APP_ROOT}}account/profile-settings.html">Settings</a>
+    <a href="#" id="topbar-logout-link">Log out</a>
+  </div>
+</div>

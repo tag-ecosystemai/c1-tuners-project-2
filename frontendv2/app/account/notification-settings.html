@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification Settings — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/account.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="settings">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+      <div class="settings-page">
+        <a href="profile-settings.html" class="back-link">← Back to Settings</a>
+        <h1>Notification Settings</h1>
+        <p class="sub">Choose what you'd like to hear about.</p>
+
+        <div class="card settings-section">
+          <h3>Learning notifications</h3>
+          <div class="toggle-row"><span class="toggle-row-label">Study reminders</span><button class="toggle-switch" data-pref="studyReminders"></button></div>
+          <div class="toggle-row"><span class="toggle-row-label">Quiz results</span><button class="toggle-switch" data-pref="quizResults"></button></div>
+          <div class="toggle-row"><span class="toggle-row-label">Flashcards due for review</span><button class="toggle-switch" data-pref="flashcardsDue"></button></div>
+          <div class="toggle-row"><span class="toggle-row-label">Study plan reminders</span><button class="toggle-switch" data-pref="studyPlanReminders"></button></div>
+          <div class="toggle-row"><span class="toggle-row-label">AI recommendations</span><button class="toggle-switch" data-pref="aiRecommendations"></button></div>
+          <div class="toggle-row"><span class="toggle-row-label">Course activity</span><button class="toggle-switch" data-pref="courseActivity"></button></div>
+        </div>
+
+        <div class="card settings-section">
+          <h3>System notifications</h3>
+          <div class="toggle-row"><span class="toggle-row-label">Material processing completed</span><button class="toggle-switch" data-pref="materialProcessingCompleted"></button></div>
+          <div class="toggle-row"><span class="toggle-row-label">Material processing failed</span><button class="toggle-switch" data-pref="materialProcessingFailed"></button></div>
+          <div class="toggle-row"><span class="toggle-row-label">Account &amp; security alerts</span><button class="toggle-switch" data-pref="accountSecurityAlerts"></button></div>
+        </div>
+
+        <div class="card settings-section">
+          <h3>Reminder time</h3>
+          <p class="sub" style="margin-bottom:12px;">When should we send your daily study reminder?</p>
+          <input type="time" id="reminder-time" style="padding:10px 14px; border:1px solid var(--color-border); border-radius:var(--radius-sm); background:var(--color-bg); font-size:14px;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/pages/notification-settings.js"></script>
+</body>
+</html>

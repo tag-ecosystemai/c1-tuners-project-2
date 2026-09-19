@@ -1,0 +1,32 @@
+{
+  "greetingName": "John",
+  "continueLearning": {
+    "courseId": "csc301",
+    "courseCode": "CSC 301",
+    "courseTitle": "Artificial Intelligence",
+    "lectureTitle": "Lecture 05 — Introduction to Neural Networks",
+    "topic": "Neural Networks",
+    "progress": 68
+  },
+  "comingUp": {
+    "title": "MTH 201 Exam",
+    "subtitle": "Differential Equations · Main Auditorium",
+    "date": "22 Sept, 9:00 AM",
+    "daysRemaining": 5
+  },
+  "todaysFocus": [
+    { "title": "Review Backpropagation", "duration": "15 min", "course": "CSC 301", "type": "review" },
+    { "title": "Take a 10-question quiz", "duration": "12 min", "course": "CSC 301", "type": "quiz" },
+    { "title": "Review yesterday's flashcards", "duration": "20 min · 8 cards", "course": "CSC 301", "type": "flashcards" }
+  ],
+  "weakAreas": [
+    { "topic": "Backpropagation", "course": "CSC 301", "confidence": "weak", "confidencePct": "42%" },
+    { "topic": "Convolutional Neural Networks", "course": "CSC 301", "confidence": "developing", "confidencePct": "61%" },
+    { "topic": "Differential Equations", "course": "MTH 201", "confidence": "developing", "confidencePct": "58%" }
+  ],
+  "recentActivity": [
+    { "text": "Completed Neural Networks Quiz", "detail": "7/10 · CSC 301", "time": "Today" },
+    { "text": "Reviewed 12 flashcards", "detail": "CSC 301", "time": "Yesterday" },
+    { "text": "Uploaded Search Strategies in AI", "detail": "CSC 301", "time": "Today" }
+  ]
+}

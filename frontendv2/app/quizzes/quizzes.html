@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quizzes — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/quizzes.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="quizzes">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+      <div class="quizzes-header">
+        <div>
+          <h1>Quizzes</h1>
+          <p>Every quiz across your learning space — practice whenever you're ready.</p>
+        </div>
+        <a href="quiz-setup.html" class="btn btn-primary">+ Generate Quiz</a>
+      </div>
+
+      <div class="home-section-title"><h3>Continue</h3></div>
+      <div id="continue-quizzes" style="margin-bottom:28px;"></div>
+
+      <div class="home-section-title"><h3>Recent</h3></div>
+      <div id="recent-quizzes" style="margin-bottom:28px;"></div>
+
+      <div class="home-section-title">
+        <h3>Quiz History</h3>
+        <a href="#" id="toggle-history-link">View all →</a>
+      </div>
+      <div id="quiz-history" style="display:none; margin-bottom:28px;"></div>
+
+      <div class="home-section-title"><h3>Browse by Course</h3></div>
+      <div class="course-chip-row" id="course-chip-row"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/pages/quizzes-hub.js"></script>
+</body>
+</html>

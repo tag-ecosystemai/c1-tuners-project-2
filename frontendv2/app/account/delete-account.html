@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delete Account — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/auth.css">
+<link rel="stylesheet" href="../../assets/css/pages/account.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="settings">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+      <div class="settings-page" style="max-width:460px;">
+        <a href="profile-settings.html" class="back-link">← Back to Settings</a>
+
+        <div class="card" style="text-align:center;">
+          <div class="dialog-icon is-danger" style="margin:0 auto 16px;">⚠</div>
+          <h1 style="font-size:22px; margin-bottom:8px;">Delete your account</h1>
+          <p class="sub">This permanently deletes your account and cannot be undone.</p>
+
+          <div class="dialog-affected" style="text-align:left;">
+            <ul>
+              <li>All courses, materials, and uploaded content</li>
+              <li>Quiz and flashcard history</li>
+              <li>Study plan and progress data</li>
+              <li>Account and login information</li>
+            </ul>
+          </div>
+
+          <div class="field" style="text-align:left; margin-top:18px;">
+            <label for="delete-confirm-input">Type <strong>DELETE</strong> to confirm</label>
+            <input type="text" id="delete-confirm-input" placeholder="DELETE">
+          </div>
+
+          <button class="btn btn-danger" id="delete-account-btn" disabled style="width:100%; justify-content:center;">Permanently Delete Account</button>
+          <a href="profile-settings.html" class="btn btn-secondary" style="width:100%; justify-content:center; margin-top:10px;">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/pages/delete-account.js"></script>
+</body>
+</html>
