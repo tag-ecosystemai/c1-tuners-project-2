@@ -1,5 +1,4 @@
 from agent.router import detect_course
-from agent.memory import resolve_followup
 from agent.intent import detect_intent
 from features.tutor import answer_question
 from features.quiz import generate_quiz
@@ -13,19 +12,15 @@ def study_agent_ask(store, question, courses, history=None):
         history = []
 
     intent = detect_intent(question)
-    context_aware_question = resolve_followup(question, history)
-    course_id = detect_course(context_aware_question, courses)
-
-    if course_id:
-        course_id = course_id.lower()
+    
+    # Course routing (question is already resolved to standalone)
+    course_id = detect_course(question, courses)
 
     if course_id is None:
         answer = (
             "I couldn't tell which course this question relates to. "
-            "Could you let me know which course you mean?"
+            "Could you please specify the course name or code?"
         )
-        history.append({"role": "student", "content": question})
-        history.append({"role": "agent", "content": answer})
         return answer, history
 
     if intent == "quiz":
@@ -35,14 +30,13 @@ def study_agent_ask(store, question, courses, history=None):
     elif intent == "study_guide":
         answer = generate_study_guide(store, course_id=course_id)
     else:
+        # Pass conversation history into the updated answer_question function
         answer = answer_question(
             store,
-            context_aware_question,
-            course_id=course_id
+            question,
+            course_id=course_id,
+            chat_history=history
         )
-
-    history.append({"role": "student", "content": question})
-    history.append({"role": "agent", "content": str(answer)})
 
     return answer, history
 
@@ -55,23 +49,27 @@ def generate_study_guide(store, course_id, top_k=15):
         course_id=course_id
     )
 
-    chunks = results["documents"][0]
+    chunks = results.get("documents", [[]])[0]
+    metadatas = results.get("metadatas", [[]])[0]
     context = "\n\n".join(chunks)
 
-    prompt = f"""You are a study guide generator. Use ONLY the course material
-below to create a structured study guide. Do not add information that is
-not present in the material.
+    prompt = f"""You are an academic study guide generator. Use ONLY the course material
+below to create a structured study guide. Do not invent information.
 
 Course material:
 {context}
 
-Create a study guide with:
+Format:
 - Numbered main topics
-- Key subtopics under each one
-- A recommended study order at the end
+- Key subtopics with short bullet explanations
+- Recommended study order at the end
 
-Format it clearly using plain text with numbers and dashes."""
+Use blank lines between sections."""
 
-    guide = generate_response(prompt)
+    guide = generate_response(prompt).strip()
+
+    sources = list({m.get("document_name") for m in metadatas if m.get("document_name")})
+    if sources:
+        guide += "\n\nSource: " + ", ".join(sources)
 
     return guide

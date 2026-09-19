@@ -1,16 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Check } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { getFlashcards } from "@/lib/api";
 import { mockFlashcards } from "@/lib/mock-data";
 import type { Flashcard } from "@/types";
-
-const RATINGS = [
-  { key: "again", label: "Again" },
-  { key: "hard", label: "Hard" },
-  { key: "good", label: "Good" },
-  { key: "easy", label: "Easy" },
-] as const;
 
 export function FlashcardPanel({ courseId }: { courseId: string }) {
   const [cards, setCards] = useState<Flashcard[]>([]);
@@ -18,35 +14,80 @@ export function FlashcardPanel({ courseId }: { courseId: string }) {
   const [usingMockData, setUsingMockData] = useState(false);
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [completed, setCompleted] = useState(false);
 
-  useEffect(() => {
+  const load = () => {
+    setLoading(true);
+    setIndex(0);
+    setFlipped(false);
+    setCompleted(false);
     getFlashcards(courseId)
-      .then((data) => setCards(data.length ? data : mockFlashcards))
+      .then((data) => {
+        setCards(data.length ? data : mockFlashcards);
+        setUsingMockData(data.length === 0);
+      })
       .catch(() => {
         setUsingMockData(true);
         setCards(mockFlashcards);
       })
       .finally(() => setLoading(false));
-  }, [courseId]);
+  };
+
+  useEffect(load, [courseId]);
+
+  const restart = () => {
+    setIndex(0);
+    setFlipped(false);
+    setCompleted(false);
+  };
 
   if (loading) return <p className="text-sm text-ink-muted">Generating flashcards…</p>;
   if (cards.length === 0) return <p className="text-sm text-ink-muted">No flashcards yet.</p>;
+
+  if (completed) {
+    return (
+      <Card className="flex max-w-md flex-col items-center py-16 text-center">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-forest-light">
+          <Check className="h-5 w-5 text-forest" />
+        </div>
+        <h2 className="mt-4 font-serif text-xl text-ink">Deck complete.</h2>
+        <p className="mt-1 text-sm text-ink-muted">You went through all {cards.length} cards.</p>
+        <div className="mt-5 flex gap-2">
+          <Button variant="outline" onClick={restart}>
+            Review again
+          </Button>
+          <Button onClick={load}>Start another round</Button>
+        </div>
+      </Card>
+    );
+  }
 
   const card = cards[index];
   const isLast = index === cards.length - 1;
 
   const next = () => {
     setFlipped(false);
-    if (!isLast) setIndex(index + 1);
+    if (isLast) {
+      setCompleted(true);
+    } else {
+      setIndex(index + 1);
+    }
   };
 
   return (
     <div className="flex flex-col items-center">
-      {usingMockData && (
-        <div className="mb-4 inline-block rounded-full bg-amber/15 px-3 py-1 text-xs text-amber-dark">
-          Sample flashcards — backend not connected yet
-        </div>
-      )}
+      <div className="mb-4 flex w-full max-w-md items-center justify-between">
+        {usingMockData ? (
+          <span className="rounded-full bg-amber/15 px-3 py-1 text-xs text-amber-dark">
+            Sample flashcards — backend not connected yet
+          </span>
+        ) : (
+          <span />
+        )}
+        <button onClick={restart} className="text-xs text-ink-muted hover:text-ink">
+          Restart
+        </button>
+      </div>
 
       <p className="mb-4 text-sm text-ink-muted">
         {index + 1} / {cards.length}
@@ -82,14 +123,14 @@ export function FlashcardPanel({ courseId }: { courseId: string }) {
       <p className="mt-3 text-xs text-ink-muted">Tap the card to flip</p>
 
       <div className="mt-6 flex gap-2">
-        {RATINGS.map((r) => (
+        {["Again", "Hard", "Good", "Easy"].map((label) => (
           <button
-            key={r.key}
+            key={label}
             onClick={next}
             disabled={!flipped}
             className="rounded-full border border-border px-4 py-2 text-sm text-ink hover:bg-forest-light disabled:opacity-40"
           >
-            {r.label}
+            {label}
           </button>
         ))}
       </div>

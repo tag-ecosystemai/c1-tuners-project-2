@@ -220,7 +220,7 @@ def run_study_agent(
             store,
             standalone_question,
             ai_courses,
-            []
+            request.history
         )
 
     # Preserve the original conversation

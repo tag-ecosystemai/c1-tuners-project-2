@@ -84,34 +84,38 @@ export default function CoursePage() {
       </div>
 
       <div className="mt-6">
-        {tab === "materials" && (
-          <div>
-            <div className="mb-4 flex justify-end">
-              <Button variant="outline" onClick={() => setShowUpload(true)}>
-                <Upload className="h-4 w-4" /> Upload material
-              </Button>
-            </div>
-
-            {materials.length === 0 ? (
-              <Card className="flex flex-col items-center justify-center py-16 text-center">
-                <p className="text-ink">No materials yet.</p>
-                <p className="mt-1 text-sm text-ink-muted">
-                  Upload your first note or slide deck for this course.
-                </p>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {materials.map((m) => (
-                  <MaterialCard key={m.id} material={m} />
-                ))}
-              </div>
-            )}
+        <div className={tab === "materials" ? "" : "hidden"}>
+          <div className="mb-4 flex justify-end">
+            <Button variant="outline" onClick={() => setShowUpload(true)}>
+              <Upload className="h-4 w-4" /> Upload material
+            </Button>
           </div>
-        )}
 
-        {tab === "tutor" && <TutorPanel courseId={courseId} />}
-        {tab === "quiz" && <QuizPanel courseId={courseId} />}
-        {tab === "flashcards" && <FlashcardPanel courseId={courseId} />}
+          {materials.length === 0 ? (
+            <Card className="flex flex-col items-center justify-center py-16 text-center">
+              <p className="text-ink">No materials yet.</p>
+              <p className="mt-1 text-sm text-ink-muted">
+                Upload your first note or slide deck for this course.
+              </p>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {materials.map((m) => (
+                <MaterialCard key={m.id} material={m} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className={tab === "tutor" ? "" : "hidden"}>
+          <TutorPanel courseId={courseId} />
+        </div>
+        <div className={tab === "quiz" ? "" : "hidden"}>
+          <QuizPanel courseId={courseId} />
+        </div>
+        <div className={tab === "flashcards" ? "" : "hidden"}>
+          <FlashcardPanel courseId={courseId} />
+        </div>
       </div>
 
       {showUpload && (

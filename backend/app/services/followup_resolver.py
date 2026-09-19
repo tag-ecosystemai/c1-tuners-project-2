@@ -1,58 +1,31 @@
-from ai.features.quiz import generate_quiz
+from llm.ollama_client import generate_response
 
-def resolve_question_in_backend(question, history):
+def resolve_question_in_backend(question: str, history: list[dict]) -> str:
     """
-    Handles simple follow-up questions without modifying
-    the teammate's AI files.
+    Uses the LLM to resolve follow-ups (e.g., 'was this from my note?')
+    into a complete, standalone question based on previous conversation context.
     """
-
     if not history:
         return question
 
-    previous_student_questions = [
-        turn["content"]
-        for turn in history
-        if turn["role"] == "student"
-    ]
-
-    if not previous_student_questions:
-        return question
-
-    previous_question = previous_student_questions[-1]
-
-    followup_phrases = [
-        "explain that",
-        "explain it",
-        "explain this",
-        "tell me more",
-        "give me an example",
-        "explain more",
-        "in simpler terms",
-        "simpler terms",
-        "what about that",
-        "what about this"
-    ]
-
-    question_lower = question.lower()
-
-    is_followup = any(
-        phrase in question_lower
-        for phrase in followup_phrases
+    # Grab the last 4 turns
+    recent_history = history[-4:]
+    history_str = "\n".join(
+        [f"{turn.get('role', 'student')}: {turn.get('content', '')}" for turn in recent_history]
     )
 
-    if not is_followup:
-        return question
+    prompt = f"""You are an intelligent query reformulation engine.
+Given the conversation history and a follow-up query from a student, rewrite the follow-up query into a single, complete, standalone question.
 
-    # Extract the main topic from a simple previous question.
-    topic = previous_question.strip()
+- Preserve the intent of the question.
+- Do NOT answer the question.
+- If it's already a complete standalone question, return it verbatim.
 
-    if topic.lower().startswith("what is "):
-        topic = topic[8:].rstrip("?")
+Chat History:
+{history_str}
 
-    elif topic.lower().startswith("what are "):
-        topic = topic[9:].rstrip("?")
+Follow-up Query: {question}
+Standalone Question:"""
 
-    elif topic.lower().startswith("define "):
-        topic = topic[7:].rstrip("?")
-
-    return f"What is {topic}?"
+    resolved = generate_response(prompt).strip()
+    return resolved if resolved else question
