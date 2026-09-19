@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home — Sabilearn</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/app-shell.css">
+<link rel="stylesheet" href="../assets/css/pages/home.css">
+<script>window.SITE_ROOT = '../'; window.APP_ROOT = './';</script>
+</head>
+<body data-page="home">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+
+      <div class="home-header">
+        <div>
+          <div class="home-date" id="home-date">—</div>
+          <h1 id="home-greeting">Good afternoon.</h1>
+          <p class="home-header-sub">Here's what your learning looks like today.</p>
+        </div>
+        <div class="home-header-actions">
+          <a href="library/library.html" class="btn btn-secondary btn-sm">↑ Upload material</a>
+          <a href="study/study-session.html" class="btn btn-primary btn-sm">✦ Ask AI</a>
+        </div>
+      </div>
+
+      <div class="home-top-grid">
+        <div class="continue-card">
+          <div>
+            <span class="badge">Continue learning</span>
+            <div id="continue-course-tag" style="font-size:13px; opacity:0.8; margin-bottom:6px;"></div>
+            <h2 id="continue-lecture-title"></h2>
+            <p>Pick up where you left off and keep your momentum going.</p>
+          </div>
+          <div class="continue-card-footer">
+            <a href="study/study-session.html" id="continue-btn" class="btn btn-primary btn-sm">Continue →</a>
+            <div class="continue-progress-track"><div class="continue-progress-fill" id="continue-progress-fill"></div></div>
+            <span class="continue-progress-label" id="continue-progress-label"></span>
+          </div>
+        </div>
+
+        <div class="card coming-up-card">
+          <span class="badge">Coming up</span>
+          <h3 id="coming-up-title"></h3>
+          <p class="sub" id="coming-up-sub"></p>
+          <div class="coming-up-days">
+            <span class="num" id="coming-up-days-num"></span>
+            <span class="unit">days remaining</span>
+          </div>
+          <span class="coming-up-date" id="coming-up-date"></span>
+        </div>
+      </div>
+
+      <div class="home-section-title">
+        <h3>Your next best steps</h3>
+        <a href="study-plan/study-plan.html">View study plan →</a>
+      </div>
+      <div class="focus-grid" id="focus-grid"></div>
+
+      <div class="home-bottom-grid">
+        <div class="card">
+          <div class="home-section-title">
+            <h3>Course health</h3>
+            <a href="progress/progress.html">Details →</a>
+          </div>
+          <div id="course-health-list"></div>
+        </div>
+
+        <div class="card">
+          <div class="home-section-title">
+            <h3>Keep an eye on these</h3>
+            <a href="progress/progress.html">Details →</a>
+          </div>
+          <div id="weak-areas-list"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="home-section-title">
+          <h3>Recent activity</h3>
+        </div>
+        <div id="activity-list"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="quick-action-wrap">
+  <div class="quick-action-menu" id="quick-action-menu">
+    <a href="study/study-session.html" class="quick-action-item">✦ Ask AI</a>
+    <a href="library/library.html" class="quick-action-item">↑ Upload Material</a>
+    <a href="quizzes/quiz-setup.html" class="quick-action-item">? Take a Quiz</a>
+    <a href="flashcards/flashcards.html" class="quick-action-item">▭ Review Flashcards</a>
+    <a href="courses/add-course.html" class="quick-action-item">+ Add Course</a>
+    <a href="study-plan/study-plan.html" class="quick-action-item">◎ View Study Plan</a>
+  </div>
+  <button class="quick-action-fab" id="quick-action-fab">+</button>
+</div>
+
+<script src="../assets/js/include.js"></script>
+<script src="../assets/js/dialogs.js"></script>
+<script src="../assets/js/pages/home.js"></script>
+</body>
+</html>

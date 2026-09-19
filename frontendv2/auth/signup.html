@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create your account — Sabilearn</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/pages/auth.css">
+</head>
+<body>
+<div class="auth-shell">
+
+  <header class="auth-header">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">✦</span>
+      sabilearn
+    </a>
+  </header>
+
+  <main class="auth-main">
+    <div class="auth-card">
+      <h1>Create your account</h1>
+      <p class="auth-sub">Start your personalized learning journey.</p>
+
+      <div class="auth-form-error" role="alert"></div>
+
+      <form id="signup-form" novalidate>
+        <div class="field">
+          <label for="name">Full Name</label>
+          <div class="field-input-wrap">
+            <input type="text" id="name" name="name" autocomplete="name" placeholder="Chidera Eze">
+          </div>
+          <p class="field-error">Enter your full name.</p>
+        </div>
+
+        <div class="field">
+          <label for="email">Email Address</label>
+          <div class="field-input-wrap">
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="you@school.edu.ng">
+          </div>
+          <p class="field-error">Enter a valid email address.</p>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="field-input-wrap">
+            <input type="password" id="password" name="password" autocomplete="new-password" placeholder="At least 8 characters">
+            <button type="button" class="field-toggle-visibility">Show</button>
+          </div>
+          <p class="field-error">Password must be at least 8 characters.</p>
+        </div>
+
+        <div class="field">
+          <label for="confirm-password">Confirm Password</label>
+          <div class="field-input-wrap">
+            <input type="password" id="confirm-password" name="confirm-password" autocomplete="new-password" placeholder="Re-enter your password">
+            <button type="button" class="field-toggle-visibility">Show</button>
+          </div>
+          <p class="field-error">Passwords don&rsquo;t match.</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit">Create Account</button>
+      </form>
+
+      <p class="auth-footer-note">Already have an account? <a href="login.html">Log In</a></p>
+    </div>
+  </main>
+</div>
+
+<script src="../assets/js/pages/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create a Quiz — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/quizzes.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="quizzes">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+      <div class="setup-page">
+
+        <div id="setup-view">
+          <a href="quizzes.html" class="back-link">← Back to Quizzes</a>
+          <h1>Create a Quiz</h1>
+          <p class="sub">Choose what you want to practice and let AI build a quiz around it.</p>
+
+          <div class="setup-section">
+            <label>Course</label>
+            <select id="setup-course-select" style="width:100%; padding:12px 14px; border:1px solid var(--color-border); border-radius:var(--radius-sm); background:var(--color-bg); font-size:14px;"></select>
+          </div>
+
+          <div class="setup-section">
+            <label>What should the quiz cover?</label>
+            <div class="setup-options">
+              <button class="setup-chip source-chip is-selected" data-source="course">Entire Course</button>
+              <button class="setup-chip source-chip" data-source="topic">Topic</button>
+              <button class="setup-chip source-chip" data-source="material">Material</button>
+            </div>
+            <div id="source-detail-wrap" style="margin-top:10px;"></div>
+          </div>
+
+          <div class="setup-section">
+            <label>Difficulty</label>
+            <div class="setup-options">
+              <button class="setup-chip difficulty-chip" data-value="Easy">Easy</button>
+              <button class="setup-chip difficulty-chip is-selected" data-value="Medium">Medium</button>
+              <button class="setup-chip difficulty-chip" data-value="Hard">Hard</button>
+            </div>
+          </div>
+
+          <div class="setup-section">
+            <label>Number of questions</label>
+            <div class="setup-options">
+              <button class="setup-chip count-chip" data-value="5">5</button>
+              <button class="setup-chip count-chip is-selected" data-value="10">10</button>
+              <button class="setup-chip count-chip" data-value="15">15</button>
+              <button class="setup-chip count-chip" data-value="20">20</button>
+            </div>
+          </div>
+
+          <div class="setup-section">
+            <label>Question types</label>
+            <div class="setup-options">
+              <button class="setup-chip type-chip is-selected" data-value="mcq">Multiple Choice</button>
+              <button class="setup-chip type-chip" data-value="tf">True / False</button>
+              <button class="setup-chip type-chip" data-value="short">Short Answer</button>
+            </div>
+          </div>
+
+          <div class="setup-section">
+            <label>Focus on</label>
+            <div class="setup-options">
+              <button class="setup-chip focus-chip is-selected" data-value="all">All topics</button>
+              <button class="setup-chip focus-chip" data-value="weak">Areas I need to improve</button>
+            </div>
+          </div>
+
+          <p class="setup-estimate" id="estimate-text"></p>
+
+          <button class="btn btn-primary" id="generate-quiz-btn" style="width:100%; justify-content:center;">Generate Quiz</button>
+        </div>
+
+        <div id="preview-view" class="card preview-card" style="display:none;">
+          <span class="eyebrow" style="margin-bottom:14px;">Quiz ready</span>
+          <input type="text" id="preview-title-input">
+          <p class="meta" id="preview-meta"></p>
+          <div class="preview-topics" id="preview-topics"></div>
+          <p class="preview-estimate" id="preview-estimate"></p>
+          <button class="btn btn-primary" id="start-quiz-btn" style="width:100%; justify-content:center;">Start Quiz</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/api-config.js"></script>
+<script src="../../assets/js/pages/quiz-setup.js"></script>
+</body>
+</html>

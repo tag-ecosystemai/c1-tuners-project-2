@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Courses — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/home.css">
+<link rel="stylesheet" href="../../assets/css/pages/library.css">
+<link rel="stylesheet" href="../../assets/css/pages/courses.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="my-courses">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+      <div class="courses-header" style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px;">
+        <div>
+          <h1>My Courses</h1>
+          <p>Everything scoped to a single course — materials, AI tutor, quizzes and flashcards.</p>
+        </div>
+        <a href="add-course.html" class="btn btn-primary">+ Add Course</a>
+      </div>
+
+      <div class="course-grid" id="course-grid"></div>
+
+      <div id="archived-section" style="display:none; margin-top:32px;">
+        <button id="archived-toggle" class="btn btn-secondary btn-sm" style="margin-bottom:14px;" onclick="document.getElementById('archived-list').classList.toggle('is-open')"></button>
+        <div id="archived-list" class="is-open"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/pages/my-courses.js"></script>
+</body>
+</html>

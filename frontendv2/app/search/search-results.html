@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/library.css">
+<link rel="stylesheet" href="../../assets/css/pages/courses.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="home">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content" style="max-width:680px; margin:0 auto;">
+      <div class="library-search" style="max-width:none; margin-bottom:24px;">
+        <span>🔍</span>
+        <input type="text" id="search-input-field" placeholder="Search courses, notes, or topics" onkeydown="if(event.key==='Enter'){window.location.href='search-results.html?q='+encodeURIComponent(this.value)}">
+      </div>
+
+      <p style="color:var(--color-text-faint); font-size:13.5px; margin-bottom:20px;">
+        Results for "<span id="search-query-text"></span>"
+      </p>
+
+      <div id="search-results"></div>
+
+      <div class="card" style="text-align:center; margin-top:12px;">
+        <p style="font-size:13.5px; color:var(--color-text-muted); margin-bottom:14px;">Search finds things. The AI Tutor helps you understand them.</p>
+        <button class="btn btn-primary" id="ask-ai-btn">Ask AI</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/pages/search-results.js"></script>
+</body>
+</html>

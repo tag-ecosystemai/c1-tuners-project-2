@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Plan — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/study-plan.css">
+<link rel="stylesheet" href="../../assets/css/pages/home.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="study-plan">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+      <div class="plan-header">
+        <h1>Study Plan</h1>
+        <p>Built from your goals, progress, quiz results, and weak topics.</p>
+      </div>
+
+      <div class="plan-tabs">
+        <button class="plan-tab is-active" data-section="today">Today</button>
+        <button class="plan-tab" data-section="week">This Week</button>
+        <button class="plan-tab" data-section="upcoming">Upcoming</button>
+      </div>
+
+      <div class="plan-progress-summary">
+        <span id="plan-progress-label"></span>
+        <div class="progress-bar-track" style="margin-top:6px;"><div class="progress-bar-fill" id="plan-progress-fill"></div></div>
+      </div>
+
+      <div class="plan-section" id="section-today">
+        <div id="plan-today"></div>
+      </div>
+      <div class="plan-section" id="section-week" style="display:none;">
+        <div id="plan-week"></div>
+      </div>
+      <div class="plan-section" id="section-upcoming" style="display:none;">
+        <div id="plan-upcoming"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/pages/study-plan.js"></script>
+</body>
+</html>

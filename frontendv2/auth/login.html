@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in — Sabilearn</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/pages/auth.css">
+</head>
+<body>
+<div class="auth-shell">
+
+  <header class="auth-header">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">✦</span>
+      sabilearn
+    </a>
+  </header>
+
+  <main class="auth-main">
+    <div class="auth-card">
+      <h1>Welcome back</h1>
+      <p class="auth-sub">Continue your learning journey.</p>
+
+      <div class="auth-form-error" role="alert">Incorrect email or password.</div>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="email">Email Address</label>
+          <div class="field-input-wrap">
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="you@school.edu.ng">
+          </div>
+          <p class="field-error">Enter a valid email address.</p>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="field-input-wrap">
+            <input type="password" id="password" name="password" autocomplete="current-password" placeholder="Your password">
+            <button type="button" class="field-toggle-visibility">Show</button>
+          </div>
+          <p class="field-error">Enter your password.</p>
+        </div>
+
+        <div class="field-row-between">
+          <label class="checkbox-row">
+            <input type="checkbox" name="remember">
+            Remember me
+          </label>
+          <a href="forgot-password.html" style="color:var(--color-primary); font-weight:600;">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit">Log In</button>
+      </form>
+
+      <p class="auth-footer-note">Don&rsquo;t have an account? <a href="signup.html">Create Account</a></p>
+    </div>
+  </main>
+</div>
+
+<script src="../assets/js/pages/auth.js"></script>
+</body>
+</html>

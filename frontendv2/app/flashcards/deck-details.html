@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deck — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/courses.css">
+<link rel="stylesheet" href="../../assets/css/pages/flashcards.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="flashcards">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content" style="max-width:640px; margin:0 auto;">
+
+      <a href="flashcards.html" class="back-link">← Back to Flashcards</a>
+
+      <div class="deck-details-header">
+        <div>
+          <span class="badge" id="deck-course"></span>
+          <h1 id="deck-title"></h1>
+        </div>
+      </div>
+
+      <div class="deck-stat-grid">
+        <div class="overview-stat"><div class="value" id="deck-total"></div><div class="label">Cards</div></div>
+        <div class="overview-stat"><div class="value" id="deck-due"></div><div class="label">Due</div></div>
+        <div class="overview-stat"><div class="value" id="deck-progress-label"></div><div class="label">Progress</div></div>
+        <div class="overview-stat"><div class="value" style="font-size:13px;" id="deck-last-reviewed"></div><div class="label">Last reviewed</div></div>
+      </div>
+      <div class="progress-bar-track" style="margin-bottom:24px;"><div class="progress-bar-fill" id="deck-progress-fill"></div></div>
+
+      <div class="deck-actions-row">
+        <a href="#" id="study-now-btn" class="btn btn-primary">Study Now</a>
+        <button class="btn btn-secondary" id="add-card-btn">+ Add Cards</button>
+        <button class="btn btn-secondary" id="generate-more-btn">✦ Generate More Cards</button>
+      </div>
+
+      <h3 style="font-size:16px; margin-bottom:14px;">All cards</h3>
+      <div id="card-list"></div>
+
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/pages/deck-details.js"></script>
+</body>
+</html>

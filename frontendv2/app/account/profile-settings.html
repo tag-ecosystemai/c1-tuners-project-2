@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile & Settings — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/auth.css">
+<link rel="stylesheet" href="../../assets/css/pages/account.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="settings">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+      <div class="settings-page">
+        <h1>Profile &amp; Settings</h1>
+        <p class="sub">Manage your account, learning preferences, and app settings.</p>
+
+        <!-- PROFILE -->
+        <div class="card settings-section" id="profile-normal-view">
+          <h3>Profile</h3>
+          <div class="profile-row">
+            <div class="profile-avatar" id="profile-avatar"></div>
+            <div>
+              <div class="profile-row-name" id="profile-name"></div>
+              <div class="profile-row-email" id="profile-email"></div>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="edit-profile-btn" style="margin-top:12px;">Edit Profile</button>
+        </div>
+
+        <div class="card settings-section" id="edit-profile-view" style="display:none;">
+          <h3>Edit Profile</h3>
+          <p id="profile-save-status" style="font-size:13px; margin-bottom:10px;"></p>
+          <form id="edit-profile-form" novalidate>
+            <div class="field"><label for="edit-first-name">First Name</label><input type="text" id="edit-first-name" required></div>
+            <div class="field"><label for="edit-last-name">Last Name</label><input type="text" id="edit-last-name" required></div>
+            <div class="field"><label for="edit-email">Email</label><input type="email" id="edit-email" required></div>
+            <div style="display:flex; gap:10px;">
+              <button type="submit" class="btn btn-primary auth-submit" style="width:auto; flex:1;">Save Changes</button>
+              <button type="button" class="btn btn-secondary" id="cancel-edit-profile">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- LEARNING PREFERENCES -->
+        <div class="card settings-section">
+          <h3>Learning Preferences</h3>
+          <div class="settings-list-row"><span class="settings-list-row-label">Study Goals</span></div>
+          <div class="summary-tags" id="prefs-goals"></div>
+          <div class="settings-list-row" style="margin-top:14px;"><span class="settings-list-row-label">Preferred Study Methods</span></div>
+          <div class="summary-tags" id="prefs-methods"></div>
+          <div class="settings-list-row" style="margin-top:14px; border-top:none;">
+            <span class="settings-list-row-label">Available Study Time</span>
+            <span class="settings-list-row-value" id="prefs-time"></span>
+          </div>
+          <a href="edit-preferences.html" class="btn btn-secondary btn-sm" style="margin-top:14px;">Edit Learning Preferences</a>
+        </div>
+
+        <!-- ACCOUNT -->
+        <div class="card settings-section">
+          <h3>Account</h3>
+          <div class="settings-list-row">
+            <div>
+              <div class="settings-list-row-label">Password</div>
+              <div class="settings-list-row-value" id="password-last-changed"></div>
+            </div>
+            <a href="change-password.html" class="btn btn-secondary btn-sm">Change Password</a>
+          </div>
+          <div class="settings-list-row">
+            <span class="settings-list-row-label">Log Out</span>
+            <button class="btn btn-secondary btn-sm" id="logout-btn">Log Out</button>
+          </div>
+        </div>
+
+        <!-- PREFERENCES -->
+        <div class="card settings-section">
+          <h3>Preferences</h3>
+          <div class="settings-list-row">
+            <span class="settings-list-row-label">Notifications</span>
+            <a href="notification-settings.html" class="card-link">Manage →</a>
+          </div>
+          <div class="settings-list-row">
+            <span class="settings-list-row-label">Appearance</span>
+            <span class="settings-list-row-value">Light (default)</span>
+          </div>
+          <div class="settings-list-row">
+            <span class="settings-list-row-label">AI response preferences</span>
+            <span class="settings-list-row-value">Balanced detail</span>
+          </div>
+        </div>
+
+        <!-- DANGER ZONE -->
+        <div class="danger-zone">
+          <h4>Delete Account</h4>
+          <p>Permanently remove your account and all associated learning data.</p>
+          <a href="delete-account.html" class="btn btn-danger btn-sm">Delete Account</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/pages/profile-settings.js"></script>
+</body>
+</html>

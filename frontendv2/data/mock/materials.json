@@ -1,0 +1,19 @@
+{
+  "csc301": [
+    { "id": "m1", "title": "Search Strategies in AI", "type": "slides", "ext": "PPTX", "size": "1.4 MB", "date": "Today", "isNew": true },
+    { "id": "m2", "title": "Knowledge Representation", "type": "document", "ext": "PDF", "size": "2.4 MB", "date": "Today", "isNew": true },
+    { "id": "m3", "title": "Intelligent Agents", "type": "document", "ext": "PDF", "size": "3.4 MB", "date": "3 days ago", "isNew": true },
+    { "id": "m4", "title": "Introduction to Neural Networks", "type": "slides", "ext": "PPTX", "size": "4.4 MB", "date": "4 days ago", "isNew": true },
+    { "id": "m5", "title": "Backpropagation Notes", "type": "document", "ext": "PDF", "size": "5.4 MB", "date": "5 days ago", "isNew": false },
+    { "id": "m6", "title": "Computer Vision Primer", "type": "document", "ext": "PDF", "size": "6.4 MB", "date": "6 days ago", "isNew": false }
+  ],
+  "mth201": [
+    { "id": "m7", "title": "First-Order ODEs", "type": "document", "ext": "PDF", "size": "1.8 MB", "date": "2 days ago", "isNew": true },
+    { "id": "m8", "title": "Laplace Transform Tables", "type": "document", "ext": "PDF", "size": "0.6 MB", "date": "5 days ago", "isNew": false },
+    { "id": "m9", "title": "Lecture 06 Recording", "type": "recording", "ext": "MP3", "size": "38 MB", "date": "1 week ago", "isNew": false }
+  ],
+  "phy201": [
+    { "id": "m10", "title": "Kinematics Problem Set", "type": "document", "ext": "PDF", "size": "1.1 MB", "date": "1 week ago", "isNew": false },
+    { "id": "m11", "title": "Newton's Laws Slides", "type": "slides", "ext": "PPTX", "size": "3.2 MB", "date": "2 weeks ago", "isNew": false }
+  ]
+}

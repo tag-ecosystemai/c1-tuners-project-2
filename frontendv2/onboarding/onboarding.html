@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Set up your learning space — Sabilearn</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/pages/onboarding.css">
+</head>
+<body>
+<div class="onboard-shell">
+
+  <header class="onboard-header">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">✦</span>
+      sabilearn
+    </a>
+    <div class="onboard-progress" aria-label="Onboarding progress">
+      <span class="onboard-dot is-active"></span>
+      <span class="onboard-dot"></span>
+      <span class="onboard-dot"></span>
+      <span class="onboard-dot"></span>
+      <span class="onboard-dot"></span>
+    </div>
+  </header>
+
+  <main class="onboard-main">
+    <div class="onboard-card">
+
+      <!-- STEP 1 — Welcome -->
+      <section class="onboard-step is-active onboard-center" id="onboard-step-1">
+        <div class="onboard-step-icon">✦</div>
+        <h1>Welcome to your learning space</h1>
+        <p class="onboard-step-sub">Let's set things up so your AI learning assistant can better support you. This takes about two minutes.</p>
+        <button type="button" class="btn btn-primary" id="welcome-continue" style="margin:0 auto; display:inline-flex;">Get Started</button>
+      </section>
+
+      <!-- STEP 2 — Learning Goals -->
+      <section class="onboard-step" id="onboard-step-2">
+        <h1>What do you want to achieve?</h1>
+        <p class="onboard-step-sub">Select as many as apply.</p>
+
+        <div class="option-grid">
+          <label class="option-chip" data-value="Understand my courses better">
+            <input type="checkbox"> Understand my courses better
+          </label>
+          <label class="option-chip" data-value="Prepare for exams">
+            <input type="checkbox"> Prepare for exams
+          </label>
+          <label class="option-chip" data-value="Improve my grades">
+            <input type="checkbox"> Improve my grades
+          </label>
+          <label class="option-chip" data-value="Build stronger study habits">
+            <input type="checkbox"> Build stronger study habits
+          </label>
+          <label class="option-chip" data-value="Learn new skills">
+            <input type="checkbox"> Learn new skills
+          </label>
+          <label class="option-chip" data-value="Keep track of my progress">
+            <input type="checkbox"> Keep track of my progress
+          </label>
+        </div>
+
+        <div class="field option-other">
+          <label for="goal-other">Other (optional)</label>
+          <input type="text" id="goal-other" placeholder="Tell us anything else">
+        </div>
+
+        <div class="onboard-actions">
+          <button type="button" class="onboard-skip" id="goals-back">← Back</button>
+          <button type="button" class="btn btn-primary" id="goals-continue">Continue</button>
+        </div>
+      </section>
+
+      <!-- STEP 3 — Courses -->
+      <section class="onboard-step" id="onboard-step-3">
+        <h1>What are you learning?</h1>
+        <p class="onboard-step-sub">Add the courses or subjects you're currently studying. You can upload materials for them later in Library.</p>
+
+        <div class="course-list" id="course-list"></div>
+        <p class="course-empty-note" id="course-empty-note">Add at least one course to continue.</p>
+
+        <div class="add-course-form" id="add-course-form">
+          <div class="field">
+            <label for="course-name-input">Course Name</label>
+            <input type="text" id="course-name-input" placeholder="e.g. Artificial Intelligence">
+          </div>
+          <div class="field" style="margin-bottom:6px;">
+            <label for="course-desc-input">Description (optional)</label>
+            <input type="text" id="course-desc-input" placeholder="e.g. Introduction to AI and machine learning">
+          </div>
+          <div class="add-course-actions">
+            <button type="button" class="btn btn-primary btn-sm" id="save-course">Add Course</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="cancel-add-course">Cancel</button>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary" id="show-add-course" style="width:100%; justify-content:center; margin-bottom:24px;">+ Add Course</button>
+
+        <div class="onboard-actions">
+          <button type="button" class="onboard-skip" id="courses-back">← Back</button>
+          <button type="button" class="btn btn-primary" id="courses-continue">Continue</button>
+        </div>
+      </section>
+
+      <!-- STEP 4 — Study Preferences -->
+      <section class="onboard-step" id="onboard-step-4">
+        <h1>How do you like to study?</h1>
+        <p class="onboard-step-sub">Preferred study methods — select as many as apply.</p>
+
+        <div class="option-grid">
+          <label class="option-chip" data-group="methods" data-value="Reading">
+            <input type="checkbox"> Reading
+          </label>
+          <label class="option-chip" data-group="methods" data-value="Explanations">
+            <input type="checkbox"> Explanations
+          </label>
+          <label class="option-chip" data-group="methods" data-value="Practice questions">
+            <input type="checkbox"> Practice questions
+          </label>
+          <label class="option-chip" data-group="methods" data-value="Quizzes">
+            <input type="checkbox"> Quizzes
+          </label>
+          <label class="option-chip" data-group="methods" data-value="Flashcards">
+            <input type="checkbox"> Flashcards
+          </label>
+          <label class="option-chip" data-group="methods" data-value="Examples">
+            <input type="checkbox"> Examples
+          </label>
+        </div>
+
+        <p class="onboard-step-sub" style="margin-bottom:14px;">How much time can you study each day?</p>
+        <div class="time-options">
+          <label class="option-chip time-option" data-value="15–30 minutes"><input type="radio" name="time"> 15–30 minutes</label>
+          <label class="option-chip time-option" data-value="30–60 minutes"><input type="radio" name="time"> 30–60 minutes</label>
+          <label class="option-chip time-option" data-value="1–2 hours"><input type="radio" name="time"> 1–2 hours</label>
+          <label class="option-chip time-option" data-value="2+ hours"><input type="radio" name="time"> 2+ hours</label>
+          <label class="option-chip time-option" data-value="Different each day" style="grid-column: span 2;"><input type="radio" name="time"> Different each day</label>
+        </div>
+
+        <div class="onboard-actions">
+          <button type="button" class="onboard-skip" id="preferences-back">← Back</button>
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="btn btn-secondary" id="preferences-skip">Skip for now</button>
+            <button type="button" class="btn btn-primary" id="preferences-continue">Continue</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 5 — Review -->
+      <section class="onboard-step" id="onboard-step-5">
+        <h1>You're all set</h1>
+        <p class="onboard-step-sub">Here's what we'll use to personalize your learning space.</p>
+
+        <div class="review-block">
+          <div class="review-label">Learning Goals</div>
+          <div class="review-tags" id="review-goals"></div>
+        </div>
+        <div class="review-block">
+          <div class="review-label">Courses</div>
+          <div class="review-tags" id="review-courses"></div>
+        </div>
+        <div class="review-block">
+          <div class="review-label">Study Time</div>
+          <div class="review-tags" id="review-time"></div>
+        </div>
+        <div class="review-block">
+          <div class="review-label">Study Preferences</div>
+          <div class="review-tags" id="review-methods"></div>
+        </div>
+
+        <div class="onboard-actions" style="margin-top:24px;">
+          <button type="button" class="onboard-skip" id="review-back">← Back</button>
+          <button type="button" class="btn btn-primary" id="start-learning">Start Learning</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script src="../assets/js/pages/onboarding.js"></script>
+</body>
+</html>

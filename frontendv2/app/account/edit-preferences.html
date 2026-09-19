@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Learning Preferences — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/onboarding.css">
+<link rel="stylesheet" href="../../assets/css/pages/account.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="settings">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+      <div class="settings-page">
+        <a href="profile-settings.html" class="back-link">← Back to Settings</a>
+        <h1>Edit Learning Preferences</h1>
+        <p class="sub">These help your AI Tutor and Study Plan stay relevant to how you actually study.</p>
+
+        <div class="card" style="margin-bottom:20px;">
+          <label style="display:block; font-size:13px; font-weight:600; margin-bottom:10px;">Learning Goals</label>
+          <div class="option-grid">
+            <label class="option-chip" data-group="goals" data-value="Understand my courses better"><input type="checkbox"> Understand my courses better</label>
+            <label class="option-chip" data-group="goals" data-value="Prepare for exams"><input type="checkbox"> Prepare for exams</label>
+            <label class="option-chip" data-group="goals" data-value="Improve my grades"><input type="checkbox"> Improve my grades</label>
+            <label class="option-chip" data-group="goals" data-value="Build stronger study habits"><input type="checkbox"> Build stronger study habits</label>
+            <label class="option-chip" data-group="goals" data-value="Learn new skills"><input type="checkbox"> Learn new skills</label>
+            <label class="option-chip" data-group="goals" data-value="Keep track of my progress"><input type="checkbox"> Keep track of my progress</label>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+          <label style="display:block; font-size:13px; font-weight:600; margin-bottom:10px;">Preferred Study Methods</label>
+          <div class="option-grid">
+            <label class="option-chip" data-group="methods" data-value="Reading"><input type="checkbox"> Reading</label>
+            <label class="option-chip" data-group="methods" data-value="Explanations"><input type="checkbox"> Explanations</label>
+            <label class="option-chip" data-group="methods" data-value="Practice questions"><input type="checkbox"> Practice questions</label>
+            <label class="option-chip" data-group="methods" data-value="Quizzes"><input type="checkbox"> Quizzes</label>
+            <label class="option-chip" data-group="methods" data-value="Flashcards"><input type="checkbox"> Flashcards</label>
+            <label class="option-chip" data-group="methods" data-value="Examples"><input type="checkbox"> Examples</label>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:24px;">
+          <label style="display:block; font-size:13px; font-weight:600; margin-bottom:10px;">Available Study Time</label>
+          <div class="time-options">
+            <label class="option-chip time-option" data-value="15–30 minutes">15–30 minutes</label>
+            <label class="option-chip time-option" data-value="30–60 minutes">30–60 minutes</label>
+            <label class="option-chip time-option" data-value="1–2 hours">1–2 hours</label>
+            <label class="option-chip time-option" data-value="2+ hours">2+ hours</label>
+            <label class="option-chip time-option" data-value="Different each day" style="grid-column: span 2;">Different each day</label>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-primary" id="save-preferences-btn">Save Changes</button>
+          <a href="#" id="cancel-btn" class="btn btn-secondary">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/pages/edit-preferences.js"></script>
+</body>
+</html>

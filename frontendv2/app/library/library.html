@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Library — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/library.css">
+<link rel="stylesheet" href="../../assets/css/pages/courses.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="library">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+
+      <div class="library-header">
+        <div>
+          <span class="eyebrow">Your learning space</span>
+          <h1>My Library</h1>
+          <p class="library-header-sub">Everything you've uploaded, organized by course.</p>
+        </div>
+        <button class="btn btn-primary" id="upload-material-btn">↑ Upload material</button>
+      </div>
+
+      <div class="library-search-row">
+        <div class="library-search">
+          <span>🔍</span>
+          <input type="text" id="library-search-input" placeholder="Search your materials...">
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-tab is-active" data-filter="all">All</button>
+          <button class="filter-tab" data-filter="documents">Documents</button>
+          <button class="filter-tab" data-filter="recordings">Recordings</button>
+          <button class="filter-tab" data-filter="slides">Slides</button>
+          <button class="filter-tab" data-filter="images">Images</button>
+        </div>
+      </div>
+
+      <div class="home-section-title">
+        <h3>Course folders</h3>
+        <span class="count" id="course-count"></span>
+      </div>
+      <div class="folder-grid" id="folder-grid"></div>
+
+      <div class="home-section-title">
+        <h3>Recent materials</h3>
+      </div>
+      <div class="material-grid" id="material-grid"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Upload Material modal -->
+<div class="modal-overlay" id="upload-modal">
+  <div class="modal-card" style="max-width:540px;">
+    <div id="upload-step-select">
+      <h3>Add learning material</h3>
+      <p class="sub">Upload your notes, slides, documents or recordings and use them to study with AI.</p>
+
+      <div class="field" style="margin-bottom:18px;">
+        <label for="upload-course-select">Course</label>
+        <select id="upload-course-select" style="width:100%; padding:12px 14px; border:1px solid var(--color-border); border-radius:var(--radius-sm); background:var(--color-bg); font-size:14px;"></select>
+      </div>
+
+      <div class="dropzone" id="upload-dropzone">
+        <div class="icon">📁</div>
+        <div>Drag and drop files here, or click to browse</div>
+        <div class="types">PDF · PPT/PPTX · DOC/DOCX · Images · Audio</div>
+      </div>
+
+      <div id="selected-files-list" style="margin-bottom:16px;"></div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="upload-cancel">Cancel</button>
+        <button class="btn btn-primary" id="upload-start">Upload</button>
+      </div>
+    </div>
+
+    <div id="upload-step-processing" class="upload-processing">
+      <h3>Processing your material</h3>
+      <p class="sub">We're preparing your material for AI-powered learning.</p>
+      <div id="processing-files-list"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="upload-background" style="margin-right:auto;">Continue in background</button>
+        <button class="btn btn-primary" id="upload-done" style="display:none;">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/api-config.js"></script>
+<script src="../../assets/js/pages/library.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "notifications": [
+    { "id": "n1", "type": "learning", "title": "Recommended Study", "body": "You haven't reviewed Neural Networks in 5 days. It's recommended for today's study session.", "time": "2h ago", "read": false, "link": "study/study-session.html?course=csc301&topic=Neural%20Networks" },
+    { "id": "n2", "type": "learning", "title": "Quiz Result", "body": "Your AI quiz result is ready.", "time": "5h ago", "read": false, "link": "quizzes/quiz-taking.html?quiz=neural-networks-quiz&course=csc301" },
+    { "id": "n3", "type": "learning", "title": "Flashcards", "body": "12 flashcards are due for review.", "time": "Yesterday", "read": true, "link": "flashcards/flashcards.html" },
+    { "id": "n4", "type": "learning", "title": "Study Plan", "body": "Your study plan for today is ready.", "time": "Yesterday", "read": true, "link": "study-plan/study-plan.html" },
+    { "id": "n5", "type": "system", "title": "Material Ready", "body": "\"Search Strategies in AI\" has finished processing and is ready to study.", "time": "2 days ago", "read": true, "link": "library/library.html" }
+  ]
+}

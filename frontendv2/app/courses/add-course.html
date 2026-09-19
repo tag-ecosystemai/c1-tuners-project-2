@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add a new course — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/auth.css">
+<link rel="stylesheet" href="../../assets/css/pages/courses.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="my-courses">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+      <div class="add-course-page">
+
+        <div id="create-course-view">
+          <a href="my-courses.html" class="back-link">← Back</a>
+          <div class="card">
+            <h1>Create a new course</h1>
+            <p class="sub">Set up your course and start building your learning space.</p>
+
+            <div class="duplicate-warning" id="duplicate-warning">
+              You already have a course with this name.
+              <div class="actions">
+                <button type="button" class="btn btn-secondary btn-sm" id="use-existing-btn">Open Existing Course</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('duplicate-warning').dataset.acknowledged='1'; document.getElementById('add-course-form-el').requestSubmit();">Create Anyway</button>
+              </div>
+            </div>
+
+            <form id="add-course-form-el" novalidate>
+              <div class="field">
+                <label for="new-course-name">Course Name</label>
+                <input type="text" id="new-course-name" placeholder="e.g. Artificial Intelligence" required>
+              </div>
+              <div class="field">
+                <label for="new-course-code">Course Code (optional)</label>
+                <input type="text" id="new-course-code" placeholder="e.g. CSC 301">
+              </div>
+              <div class="field">
+                <label for="new-course-desc">Description (optional)</label>
+                <input type="text" id="new-course-desc" placeholder="e.g. Introduction to AI, machine learning and intelligent systems">
+              </div>
+              <div class="field">
+                <label for="new-course-category">Category (optional)</label>
+                <select id="new-course-category" style="width:100%; padding:12px 14px; border:1px solid var(--color-border); border-radius:var(--radius-sm); background:var(--color-bg); font-size:14px;">
+                  <option value="">Select a category</option>
+                  <option>Computer Science</option>
+                  <option>Mathematics</option>
+                  <option>Physics</option>
+                  <option>Business</option>
+                  <option>Engineering</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary auth-submit">Create Course</button>
+            </form>
+          </div>
+        </div>
+
+        <div id="course-ready-view" class="card" style="display:none; text-align:center;">
+          <div class="course-ready-icon">✓</div>
+          <h1 id="ready-course-name" style="margin-bottom:6px;"></h1>
+          <p class="sub">Your course is ready. Add your notes, slides or other learning materials to get started.</p>
+          <div style="display:flex; gap:10px; justify-content:center;">
+            <a href="course.html?course=csc301&tab=materials" class="btn btn-primary">+ Add Material</a>
+            <a href="course.html?course=csc301" class="btn btn-secondary">Explore Course</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/api-config.js"></script>
+<script src="../../assets/js/pages/add-course.js"></script>
+</body>
+</html>

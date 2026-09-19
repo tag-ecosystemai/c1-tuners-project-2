@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/notifications.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="home">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content" style="max-width:640px; margin:0 auto;">
+      <div class="notif-header">
+        <h1>Notifications</h1>
+        <button class="btn btn-secondary btn-sm" id="mark-all-read-btn">Mark all as read</button>
+      </div>
+
+      <div class="notif-tabs">
+        <button class="notif-tab is-active" data-filter="all">All</button>
+        <button class="notif-tab" data-filter="learning">Learning</button>
+        <button class="notif-tab" data-filter="system">System</button>
+      </div>
+
+      <div id="notif-list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/pages/notifications.js"></script>
+</body>
+</html>

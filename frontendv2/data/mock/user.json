@@ -1,0 +1,22 @@
+{
+  "firstName": "John",
+  "lastName": "Adebayo",
+  "email": "john.adebayo@unilag.edu.ng",
+  "school": "UNILAG",
+  "passwordLastChanged": "12 Aug 2026",
+  "goals": ["Prepare for exams", "Improve my grades"],
+  "methods": ["Practice questions", "Flashcards"],
+  "studyTime": "1–2 hours",
+  "notificationPrefs": {
+    "studyReminders": true,
+    "quizResults": true,
+    "flashcardsDue": true,
+    "studyPlanReminders": true,
+    "aiRecommendations": false,
+    "courseActivity": true,
+    "materialProcessingCompleted": true,
+    "materialProcessingFailed": true,
+    "accountSecurityAlerts": true,
+    "reminderTime": "18:00"
+  }
+}

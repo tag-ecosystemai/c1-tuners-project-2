@@ -1,0 +1,142 @@
+{
+  "quizzes": [
+    {
+      "id": "neural-networks-quiz",
+      "courseId": "csc301",
+      "courseCode": "CSC 301",
+      "title": "Neural Networks Quiz",
+      "topic": "Neural Networks",
+      "difficulty": "Medium",
+      "questions": [
+        {
+          "q": "What is the primary purpose of backpropagation?",
+          "options": ["Generate random weights", "Calculate gradients for weight updates", "Remove the output layer", "Convert images to text"],
+          "correct": 1,
+          "why": "Backpropagation computes how much each weight contributed to the error, so the network knows which direction to adjust each weight."
+        },
+        {
+          "q": "Which function is commonly used to introduce non-linearity in a neural network?",
+          "options": ["Activation function", "Loss function", "Optimizer", "Tokenizer"],
+          "correct": 0,
+          "why": "Activation functions (like ReLU or sigmoid) let the network model non-linear relationships."
+        },
+        {
+          "q": "What does a single neuron compute before applying its activation function?",
+          "options": ["A weighted sum of its inputs plus a bias", "The final class label", "A random number", "The loss of the entire network"],
+          "correct": 0,
+          "why": "Each neuron computes a weighted sum of inputs plus a bias term, then passes that through an activation function."
+        },
+        {
+          "q": "What is a Convolutional Neural Network primarily used for?",
+          "options": ["Tabular data prediction", "Grid-like data such as images", "Text-only translation", "Database indexing"],
+          "correct": 1,
+          "why": "CNNs use convolutional filters that are especially effective on grid-structured data like images."
+        },
+        {
+          "q": "What problem does gradient descent solve?",
+          "options": ["Finding weights that minimize the loss function", "Sorting the training data", "Compressing the dataset", "Choosing the number of layers"],
+          "correct": 0,
+          "why": "Gradient descent iteratively updates weights in the direction that reduces the loss."
+        },
+        {
+          "q": "What is overfitting?",
+          "options": ["When a model performs well on training data but poorly on new data", "When training takes too long", "When a model has too few parameters", "When data is not normalized"],
+          "correct": 0,
+          "why": "Overfitting happens when a model memorizes training data patterns that don't generalize to unseen data."
+        }
+      ]
+    },
+    {
+      "id": "differential-equations-quiz",
+      "courseId": "mth201",
+      "courseCode": "MTH 201",
+      "title": "Differential Equations Quiz",
+      "topic": "First-Order Equations",
+      "difficulty": "Medium",
+      "questions": [
+        {
+          "q": "What is the order of the equation dy/dx + y = x?",
+          "options": ["Zero", "First", "Second", "Third"],
+          "correct": 1,
+          "why": "The order of a differential equation is the highest derivative present — here it's the first derivative."
+        },
+        {
+          "q": "Which method is commonly used to solve first-order linear ODEs?",
+          "options": ["Integrating factor", "Matrix diagonalization", "Fourier series", "Newton-Raphson"],
+          "correct": 0,
+          "why": "The integrating factor method is the standard technique for solving first-order linear differential equations."
+        },
+        {
+          "q": "A separable differential equation can be written as:",
+          "options": ["f(y)dy = g(x)dx", "f(x,y)=0 only", "A matrix equation", "A pure constant"],
+          "correct": 0,
+          "why": "Separable equations can be rearranged so each variable and its differential are on opposite sides."
+        },
+        {
+          "q": "What is the general solution form of a homogeneous linear ODE with constant coefficients?",
+          "options": ["A combination of exponential terms based on the roots", "Always a polynomial", "Always a trigonometric function", "There is no general form"],
+          "correct": 0,
+          "why": "The solution is built from exponential terms e^(rt), where r are roots of the characteristic equation."
+        }
+      ]
+    },
+    {
+      "id": "mechanics-quiz",
+      "courseId": "phy201",
+      "courseCode": "PHY 201",
+      "title": "Mechanics Quiz",
+      "topic": "Kinematics",
+      "difficulty": "Medium",
+      "questions": [
+        {
+          "q": "What quantity describes the rate of change of velocity?",
+          "options": ["Displacement", "Acceleration", "Momentum", "Force"],
+          "correct": 1,
+          "why": "Acceleration is defined as the rate of change of velocity with respect to time."
+        },
+        {
+          "q": "Newton's First Law describes:",
+          "options": ["Action and reaction", "Inertia", "F = ma", "Gravitational attraction"],
+          "correct": 1,
+          "why": "Newton's First Law is the law of inertia — an object stays at rest or in uniform motion unless acted on by a force."
+        },
+        {
+          "q": "What is the SI unit of force?",
+          "options": ["Joule", "Watt", "Newton", "Pascal"],
+          "correct": 2,
+          "why": "Force is measured in Newtons (N), defined as kg·m/s²."
+        }
+      ]
+    },
+    {
+      "id": "search-strategies-quiz",
+      "courseId": "csc301",
+      "courseCode": "CSC 301",
+      "title": "Search Strategies Quiz",
+      "topic": "Search Strategies",
+      "difficulty": "Easy",
+      "questions": [
+        {
+          "q": "What does breadth-first search explore first?",
+          "options": ["All nodes at the current depth", "The deepest node first", "A random node", "Only goal nodes"],
+          "correct": 0,
+          "why": "Breadth-first search expands all nodes at the current depth level before moving deeper."
+        },
+        {
+          "q": "What guides a heuristic search algorithm?",
+          "options": ["Random chance", "An estimate of cost to reach the goal", "Alphabetical order", "Node creation time"],
+          "correct": 1,
+          "why": "Heuristic search uses an estimate (heuristic function) of how close a node is to the goal to guide exploration."
+        }
+      ]
+    }
+  ],
+  "history": [
+    { "quizId": "differential-equations-quiz", "status": "in-progress", "answered": 3, "total": 4 },
+    { "quizId": "neural-networks-quiz", "status": "completed", "score": 3, "total": 6, "date": "2 weeks ago", "attempt": 1 },
+    { "quizId": "neural-networks-quiz", "status": "completed", "score": 4, "total": 6, "date": "1 week ago", "attempt": 2 },
+    { "quizId": "neural-networks-quiz", "status": "completed", "score": 5, "total": 6, "date": "Today", "attempt": 3 },
+    { "quizId": "search-strategies-quiz", "courseId": "csc301", "courseCode": "CSC 301", "title": "Search Strategies Quiz", "status": "completed", "score": 9, "total": 10, "date": "3 days ago" },
+    { "quizId": "mechanics-quiz", "courseId": "phy201", "courseCode": "PHY 201", "title": "Mechanics Quiz", "status": "completed", "score": 8, "total": 10, "date": "1 week ago" }
+  ]
+}

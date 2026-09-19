@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course — Sabilearn</title>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<link rel="stylesheet" href="../../assets/css/app-shell.css">
+<link rel="stylesheet" href="../../assets/css/pages/library.css">
+<link rel="stylesheet" href="../../assets/css/pages/courses.css">
+<script>window.SITE_ROOT = '../../'; window.APP_ROOT = '../';</script>
+</head>
+<body data-page="my-courses">
+<div class="app-shell">
+
+  <div data-include="sidebar"></div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="mobile-sidebar-toggle" aria-label="Open menu">☰</button>
+      <div data-include="topbar"></div>
+    </header>
+
+    <div class="page-content">
+
+      <a href="../library/library.html" class="back-link">← Back to library</a>
+
+      <div class="workspace-header">
+        <div>
+          <span class="badge" id="course-badge"></span>
+          <h1 id="course-title"></h1>
+          <p class="meta" id="course-meta"></p>
+        </div>
+        <div class="workspace-header-actions">
+          <div class="progress-ring-lg-wrap">
+            <div class="label">Overall Progress</div>
+            <div id="course-ring"></div>
+          </div>
+          <div class="header-menu-wrap">
+            <button class="header-menu-btn" id="course-menu-btn">⋯</button>
+            <div class="header-menu-dropdown" id="course-menu-dropdown">
+              <button id="menu-edit-course">Edit Course</button>
+              <button id="menu-add-material">Add Material</button>
+              <button id="menu-archive-course">Archive Course</button>
+              <button class="is-danger" id="menu-delete-course">Delete Course</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="workspace-tabs">
+        <button class="workspace-tab" data-tab="overview">Overview</button>
+        <button class="workspace-tab" data-tab="materials">Materials</button>
+        <button class="workspace-tab" data-tab="ai-tutor">AI Tutor</button>
+        <button class="workspace-tab" data-tab="quizzes">Quizzes</button>
+        <button class="workspace-tab" data-tab="flashcards">Flashcards</button>
+      </div>
+
+      <!-- OVERVIEW -->
+      <div class="workspace-pane" id="pane-overview">
+        <div class="continue-mini-card">
+          <div>
+            <h4 id="continue-mini-title"></h4>
+            <p>Pick up where you left off.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" id="continue-learning-btn">Continue Learning →</button>
+        </div>
+
+        <div class="overview-stat-grid" id="overview-stat-grid"></div>
+
+        <div class="recommended-card">
+          <span class="eyebrow">✦ Recommended for you</span>
+          <h4 id="recommended-title"></h4>
+          <p>Your recent quiz results suggest this topic needs more practice.</p>
+          <button class="btn btn-primary btn-sm" id="recommended-study-btn">Study Topic</button>
+        </div>
+
+        <div class="overview-grid">
+          <div class="card">
+            <h3 style="font-size:18px; margin-bottom:16px;">Topic mastery</h3>
+            <div id="overview-topics"></div>
+          </div>
+          <div class="card">
+            <h3 style="font-size:16px; margin-bottom:16px;">Recent activity</h3>
+            <div id="overview-activity"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MATERIALS -->
+      <div class="workspace-pane" id="pane-materials">
+        <div class="materials-toolbar">
+          <div>
+            <h3>Course materials</h3>
+            <p>Your searchable study resources for this course.</p>
+          </div>
+          <div class="materials-toolbar-actions">
+            <button class="btn btn-secondary btn-sm">▶ Open lecture</button>
+            <button class="btn btn-primary btn-sm">+ Add material</button>
+          </div>
+        </div>
+        <div class="material-grid" id="materials-grid"></div>
+      </div>
+
+      <!-- AI TUTOR -->
+      <div class="workspace-pane" id="pane-ai-tutor">
+        <div id="tutor-pane-root"></div>
+      </div>
+
+      <!-- QUIZZES -->
+      <div class="workspace-pane" id="pane-quizzes">
+        <div id="quizzes-list"></div>
+      </div>
+
+      <!-- FLASHCARDS -->
+      <div class="workspace-pane" id="pane-flashcards">
+        <div id="flashcards-list"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/include.js"></script>
+<script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/api-config.js"></script>
+<script src="../../assets/js/ai-tutor-engine.js"></script>
+<script src="../../assets/js/pages/course.js"></script>
+<script>
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-goto-tab]');
+    if (btn) document.querySelector(`.workspace-tab[data-tab="${btn.dataset.gotoTab}"]`).click();
+  });
+</script>
+</body>
+</html>
