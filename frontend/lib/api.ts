@@ -28,8 +28,6 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 // --- Courses ---
-// Confirmed shape: GET /courses/ -> { courses: [{ id, name, code, description, created_at }] }
-// No "progress" field exists on the backend yet — defaults to 0.
 type RawCourse = { id: number; name: string; code: string; description?: string };
 
 function mapCourse(c: RawCourse): Course {
@@ -41,8 +39,6 @@ export const getCourses = async (): Promise<Course[]> => {
   return data.courses.map(mapCourse);
 };
 
-// Confirmed shape: POST /courses/ body { name, code, description } ->
-// { message, course: {...} }
 export const createCourse = async (code: string, name: string): Promise<Course> => {
   const data = await request<{ course: RawCourse }>("/courses/", {
     method: "POST",
@@ -54,9 +50,6 @@ export const createCourse = async (code: string, name: string): Promise<Course> 
 export const deleteCourse = (courseId: string) =>
   request<void>(`/courses/${courseId}`, { method: "DELETE" });
 
-// No GET /courses/{id} on this backend yet — fetch the list and find it
-// client-side. Throws if not found, so existing mock-fallback catches
-// still work unchanged.
 export const getCourse = async (courseId: string): Promise<Course> => {
   const courses = await getCourses();
   const found = courses.find((c) => c.id === courseId);
@@ -65,10 +58,6 @@ export const getCourse = async (courseId: string): Promise<Course> => {
 };
 
 // --- Materials ---
-// Confirmed shape: GET /materials/course/{course_id} ->
-// { course_id, course_name, course_code, materials: [{ id, filename, file_type, file_path, uploaded_at }] }
-// No "status" field — the backend has no staged processing yet, so
-// everything that comes back is treated as "ready".
 type RawMaterial = { id: number; filename: string };
 
 function mapMaterial(m: RawMaterial): Material {
@@ -85,8 +74,6 @@ export const getMaterials = async (courseId: string): Promise<Material[]> => {
   return data.materials.map(mapMaterial);
 };
 
-// Confirmed shape: POST /materials/upload — multipart fields "course_id"
-// (int) and "file". Response: { message, material: {...} }
 export const uploadMaterial = async (
   courseId: string,
   file: File
@@ -108,18 +95,14 @@ export const getMaterialStatus = (courseId: string, materialId: string) =>
   request<{ status: string }>(`/materials/${materialId}/status`);
 
 // --- AI Tutor ---
-// Confirmed shape: POST /ask/ body { question, course_id } ->
-// { question, course_id, answer } where "answer" is one long text block,
-// not separate explanation/analogy/example fields. We put the whole thing
-// in "explanation" and pull out a "Source: ..." line if the model included
-// one, since that pattern showed up consistently in testing.
 export const askTutor = async (
   courseId: string,
-  question: string
+  question: string,
+  chatHistory: { role: string; content: string }[] = []
 ): Promise<TutorAnswer> => {
   const data = await request<{ answer: string }>("/ask/", {
     method: "POST",
-    body: JSON.stringify({ question, course_id: Number(courseId) }),
+    body: JSON.stringify({ question, course_id: Number(courseId), chat_history: chatHistory, }),
   });
 
   const sourceMatch = data.answer.match(/Source:\s*(.+)$/im);
@@ -131,17 +114,35 @@ export const askTutor = async (
   return { explanation, analogy: "", example: "", source };
 };
 
-// --- Quiz, Flashcards, Study Agent/Plan, Profile ---
-// Not built on the backend yet — left pointed at the original contract
-// paths. These 404, get caught, and fall back to mock data automatically,
-// same as every screen already does. Update the path here once each one
-// is confirmed real — no other files need to change.
+// --- Quiz ---
+// Confirmed shape: POST /quiz/ body { course_id, topic, num_questions } ->
+// { course_id, topic, quiz: { questions: [{ question, options, answer, explanation }] } }
+// Options come back as plain strings (no ids) and "answer" is the correct
+// option's TEXT, not an id — we generate letter ids ourselves and match
+// the answer text to find correctOptionId.
+export const generateQuiz = async (courseId: string, topic = "General concepts"): Promise<Quiz> => {
+  const data = await request<{
+    quiz: { questions: { question: string; options: string[]; answer: string; explanation: string }[] };
+  }>("/quiz/", {
+    method: "POST",
+    body: JSON.stringify({ course_id: Number(courseId), topic, num_questions: 5 }),
+  });
 
-export const generateQuiz = (courseId: string, materialId?: string) =>
-  request<Quiz>(
-    `/courses/${courseId}/quiz/generate${materialId ? `?material_id=${materialId}` : ""}`,
-    { method: "POST" }
-  );
+  const letters = ["a", "b", "c", "d", "e", "f"];
+  const questions = data.quiz.questions.map((q, i) => {
+    const options = q.options.map((text, idx) => ({ id: letters[idx] ?? String(idx), text }));
+    const correct = options.find((o) => o.text === q.answer);
+    return {
+      id: `q${i + 1}`,
+      prompt: q.question,
+      options,
+      correctOptionId: correct?.id ?? options[0]?.id ?? "a",
+      explanation: q.explanation,
+    };
+  });
+
+  return { quizId: crypto.randomUUID(), questions };
+};
 
 export const submitQuizAttempt = (
   quizId: string,
@@ -152,16 +153,52 @@ export const submitQuizAttempt = (
     body: JSON.stringify({ answers }),
   });
 
-export const getFlashcards = (courseId: string, materialId?: string) =>
-  request<Flashcard[]>(
-    `/courses/${courseId}/flashcards${materialId ? `?material_id=${materialId}` : ""}`
+// --- Flashcards ---
+// Confirmed shape: POST /flashcards/ body { course_id, topic, num_cards } ->
+// { course_id, topic, flashcards: { flashcards: [{ question, answer }] } }
+export const getFlashcards = async (courseId: string, topic = "General concepts"): Promise<Flashcard[]> => {
+  const data = await request<{ flashcards: { flashcards: { question: string; answer: string }[] } }>(
+    "/flashcards/",
+    {
+      method: "POST",
+      body: JSON.stringify({ course_id: Number(courseId), topic, num_cards: 8 }),
+    }
   );
+  return data.flashcards.flashcards.map((c, i) => ({
+    id: `f${i + 1}`,
+    front: c.question,
+    back: c.answer,
+  }));
+};
 
+// --- Study Agent / Study Plan ---
+// createStudyPlan/getStudyPlan still point at unconfirmed contract paths —
+// no real endpoint returns a structured day-by-day StudyPlan yet, so these
+// keep falling back to mock data. askStudyAgentChat below IS real and
+// confirmed, but it's a different thing: a general Q&A chat, not a plan generator.
 export const createStudyPlan = (prompt: string, courseContext: string) =>
   request<StudyPlan>("/study-agent/plan", {
     method: "POST",
     body: JSON.stringify({ prompt, course_context: courseContext }),
   });
+
+export const askStudyAgentChat = async (
+  question: string,
+  history: { role: string; content: string }[] = []
+): Promise<{ text: string; source: string }> => {
+  const data = await request<{ answer: string }>("/study-agent/", {
+    method: "POST",
+    body: JSON.stringify({ question, history }),
+  });
+
+  const sourceMatch = data.answer.match(/Source:\s*(.+)$/im);
+  const source = sourceMatch ? sourceMatch[1].trim() : "";
+  const text = sourceMatch
+    ? data.answer.replace(sourceMatch[0], "").trim()
+    : data.answer;
+
+  return { text, source };
+};
 
 export const getStudyPlan = () => request<StudyPlan>("/study-plan");
 

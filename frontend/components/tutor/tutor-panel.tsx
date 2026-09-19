@@ -18,6 +18,11 @@ export function TutorPanel({ courseId }: { courseId: string }) {
   const send = async (question: string) => {
     if (!question.trim() || sending) return;
 
+    const historyPayload = messages.map((m) => ({
+      role: m.role === "student" ? "user" : "assistant",
+      content: (m.role === "student" ? m.question : m.answer?.explanation) ?? "",
+    }));
+
     const studentMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: "student",
@@ -28,14 +33,12 @@ export function TutorPanel({ courseId }: { courseId: string }) {
     setSending(true);
 
     try {
-      const answer = await askTutor(courseId, question);
+      const answer = await askTutor(courseId, question, historyPayload);
       setMessages((prev) => [
         ...prev,
         { id: crypto.randomUUID(), role: "ai", answer },
       ]);
     } catch {
-      // Backend/Ollama not reachable yet — show a placeholder so the
-      // screen still demonstrates the full interaction.
       setUsingMockData(true);
       setMessages((prev) => [
         ...prev,
@@ -48,11 +51,23 @@ export function TutorPanel({ courseId }: { courseId: string }) {
 
   return (
     <div>
-      {usingMockData && (
-        <div className="mb-4 inline-block rounded-full bg-amber/15 px-3 py-1 text-xs text-amber-dark">
-          Showing sample answers — backend not connected yet
-        </div>
-      )}
+      <div className="mb-3 flex items-center justify-between">
+        {usingMockData ? (
+          <span className="inline-block rounded-full bg-amber/15 px-3 py-1 text-xs text-amber-dark">
+            Showing sample answers — backend not connected yet
+          </span>
+        ) : (
+          <span />
+        )}
+        {messages.length > 0 && (
+          <button
+            onClick={() => setMessages([])}
+            className="ml-auto text-xs text-ink-muted hover:text-ink"
+          >
+            Restart
+          </button>
+        )}
+      </div>
 
       <div className="min-h-[200px] space-y-4">
         {messages.length === 0 && (
