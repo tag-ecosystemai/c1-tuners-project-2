@@ -39,18 +39,20 @@
             <div class="setup-options">
               <button class="setup-chip source-chip is-selected" data-source="course">Entire Course</button>
               <button class="setup-chip source-chip" data-source="topic">Topic</button>
-              <button class="setup-chip source-chip" data-source="material">Material</button>
+              <button class="setup-chip source-chip" data-source="material" id="source-chip-material">Material</button>
             </div>
             <div id="source-detail-wrap" style="margin-top:10px;"></div>
+            <p id="material-not-supported-note" style="display:none; color:var(--color-text-faint); font-size:12.5px; margin-top:6px;">Not supported yet for backend courses — the AI only generates from the whole course or a topic.</p>
           </div>
 
-          <div class="setup-section">
+          <div class="setup-section" id="difficulty-section">
             <label>Difficulty</label>
             <div class="setup-options">
               <button class="setup-chip difficulty-chip" data-value="Easy">Easy</button>
               <button class="setup-chip difficulty-chip is-selected" data-value="Medium">Medium</button>
               <button class="setup-chip difficulty-chip" data-value="Hard">Hard</button>
             </div>
+            <p id="difficulty-not-supported-note" style="display:none; color:var(--color-text-faint); font-size:12.5px; margin-top:6px;">Not supported yet for backend courses.</p>
           </div>
 
           <div class="setup-section">
@@ -63,24 +65,28 @@
             </div>
           </div>
 
-          <div class="setup-section">
+          <div class="setup-section" id="types-section">
             <label>Question types</label>
             <div class="setup-options">
               <button class="setup-chip type-chip is-selected" data-value="mcq">Multiple Choice</button>
               <button class="setup-chip type-chip" data-value="tf">True / False</button>
               <button class="setup-chip type-chip" data-value="short">Short Answer</button>
             </div>
+            <p id="types-not-supported-note" style="display:none; color:var(--color-text-faint); font-size:12.5px; margin-top:6px;">Not supported yet for backend courses — questions are generated as multiple choice.</p>
           </div>
 
-          <div class="setup-section">
+          <div class="setup-section" id="focus-section">
             <label>Focus on</label>
             <div class="setup-options">
               <button class="setup-chip focus-chip is-selected" data-value="all">All topics</button>
               <button class="setup-chip focus-chip" data-value="weak">Areas I need to improve</button>
             </div>
+            <p id="focus-not-supported-note" style="display:none; color:var(--color-text-faint); font-size:12.5px; margin-top:6px;">Not supported yet for backend courses.</p>
           </div>
 
           <p class="setup-estimate" id="estimate-text"></p>
+
+          <div id="setup-error-banner" style="display:none;"></div>
 
           <button class="btn btn-primary" id="generate-quiz-btn" style="width:100%; justify-content:center;">Generate Quiz</button>
         </div>
@@ -102,6 +108,7 @@
 <script src="../../assets/js/include.js"></script>
 <script src="../../assets/js/dialogs.js"></script>
 <script src="../../assets/js/api-config.js"></script>
+<script src="../../assets/js/generated-content-store.js"></script>
 <script src="../../assets/js/pages/quiz-setup.js"></script>
 </body>
 </html>

@@ -91,6 +91,11 @@
   color: var(--color-on-primary);
   border-color: var(--color-primary);
 }
+.setup-chip.is-disabled,
+.setup-chip:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
 
 /* ---- Quiz Setup page ---- */
 .setup-page {

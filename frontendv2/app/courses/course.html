@@ -97,7 +97,7 @@
           </div>
           <div class="materials-toolbar-actions">
             <button class="btn btn-secondary btn-sm">▶ Open lecture</button>
-            <button class="btn btn-primary btn-sm">+ Add material</button>
+            <button class="btn btn-primary btn-sm" id="add-material-btn">+ Add material</button>
           </div>
         </div>
         <div class="material-grid" id="materials-grid"></div>
@@ -122,9 +122,45 @@
   </div>
 </div>
 
+<!-- Add Material modal — uploads directly into this course, no redirect -->
+<div class="modal-overlay" id="course-upload-modal">
+  <div class="modal-card" style="max-width:540px;">
+    <div id="course-upload-step-select">
+      <h3>Add learning material</h3>
+      <p class="sub" id="course-upload-target-label">Upload your notes, slides, documents or recordings and use them to study with AI.</p>
+
+      <div class="dropzone" id="course-upload-dropzone">
+        <div class="icon">📁</div>
+        <div>Drag and drop files here, or click to browse</div>
+        <div class="types">PDF · PPT/PPTX · DOC/DOCX · Images · Audio</div>
+      </div>
+
+      <div id="course-selected-files-list" style="margin-bottom:16px;"></div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="course-upload-cancel">Cancel</button>
+        <button class="btn btn-primary" id="course-upload-start">Upload</button>
+      </div>
+    </div>
+
+    <div id="course-upload-step-processing" class="upload-processing">
+      <h3>Processing your material</h3>
+      <p class="sub">We're preparing your material for AI-powered learning.</p>
+      <div id="course-processing-files-list"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="course-upload-background" style="margin-right:auto;">Continue in background</button>
+        <button class="btn btn-primary" id="course-upload-done" style="display:none;">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="../../assets/js/include.js"></script>
 <script src="../../assets/js/dialogs.js"></script>
 <script src="../../assets/js/api-config.js"></script>
+<script src="../../assets/js/generated-content-store.js"></script>
+<script src="../../assets/js/markdown.js"></script>
+<script src="../../assets/js/chat-ui.js"></script>
 <script src="../../assets/js/ai-tutor-engine.js"></script>
 <script src="../../assets/js/pages/course.js"></script>
 <script>

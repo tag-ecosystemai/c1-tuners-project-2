@@ -1,8 +1,13 @@
 // SABILEARN — AI Tutor engine
 // Wired to POST /ask/ on the backend (backend/app/routes/ask.py) whenever
-// the calling page hands us a real backend course id. Falls back to the
-// canned mock responses below for mock/demo courses, or if the backend
-// call fails (e.g. it isn't running).
+// the calling page hands us a real backend course id:
+//   { question, course_id, chat_history }
+// Conversation history is kept client-side for the lifetime of the tutor
+// pane and sent on every turn so the backend can resolve follow-up
+// questions. Falls back to the canned mock responses below for mock/demo
+// courses. For real backend courses, a failed call surfaces a retryable
+// error bubble instead of silently swapping in a mock answer, so loading,
+// success and error states are all visibly distinct.
 
 const AI_TUTOR_RESPONSES = {
   backpropagation: {
@@ -27,27 +32,29 @@ function matchResponse(query) {
   return fallback;
 }
 
-async function getTutorResponse(courseId, query) {
-  if (typeof isBackendId === 'function' && isBackendId(courseId)) {
-    try {
-      const res = await sabilearnFetch(`${window.SABILEARN_API_BASE}/ask/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: query, course_id: Number(courseId) }),
-      });
-      if (!res.ok) throw new Error(`Backend responded ${res.status}`);
-      const data = await res.json();
-      return {
-        explanation: data.answer,
-        analogy: '',
-        example: '',
-        source: 'Answered by the Sabilearn backend',
-      };
-    } catch (err) {
-      console.warn('Sabilearn: AI Tutor backend call failed, using mock response.', err);
-    }
-  }
-  return matchResponse(query);
+// Calls the real backend. Throws on any non-OK response or network/timeout
+// failure so the caller can show a proper error state instead of silently
+// swapping in a mock answer.
+async function fetchBackendTutorAnswer(courseId, query, chatHistory) {
+  const res = await sabilearnFetch(`${window.SABILEARN_API_BASE}/ask/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      question: query,
+      course_id: Number(courseId),
+      chat_history: chatHistory,
+    }),
+  });
+  if (!res.ok) throw new Error(`Backend responded ${res.status}`);
+  const data = await res.json();
+  return {
+    explanation: answerToText(data.answer),
+    analogy: '',
+    example: '',
+    // Only what the backend actually sent. /ask/ doesn't return a source
+    // today, so no chip is shown until it does.
+    source: extractSource(data),
+  };
 }
 
 function renderTutorMessage(container, response, isUser) {
@@ -61,16 +68,16 @@ function renderTutorMessage(container, response, isUser) {
       <div class="tutor-msg-label">✦ Sabilearn tutor</div>
       <div class="tutor-response-card">
         <div class="tutor-response-label">Explanation</div>
-        <p>${response.explanation}</p>
+        <div class="tutor-markdown">${renderMarkdown(response.explanation)}</div>
         ${response.analogy ? `
         <div class="tutor-analogy-box">
           <div class="tutor-response-label">Simple analogy</div>
-          <p>${response.analogy}</p>
+          <div class="tutor-markdown">${renderMarkdown(response.analogy)}</div>
         </div>` : ''}
         ${response.example ? `
         <div class="tutor-response-label" style="margin-top:14px;">Example</div>
-        <p>${response.example}</p>` : ''}
-        <div class="tutor-source-chip">📖 ${response.source}</div>
+        <div class="tutor-markdown">${renderMarkdown(response.example)}</div>` : ''}
+        ${response.source ? `<div class="tutor-source-chip">📖 ${sabilearnEscapeHtml(response.source)}</div>` : ''}
       </div>
       <div class="tutor-quick-actions">
         <button class="quick-chip" data-action="simpler">Explain simpler</button>
@@ -104,33 +111,75 @@ function initAiTutor(root, { courseId, courseCode, courseTitle, quizLink, flashc
   `;
 
   const thread = root.querySelector('#tutor-thread');
+  const input = root.querySelector('#tutor-input');
+  const sendBtn = root.querySelector('.tutor-send-btn');
   const isRealCourse = typeof isBackendId === 'function' && isBackendId(courseId);
+
+  // Conversation history for this tutor session, sent to the backend on
+  // every turn ({ role: 'user' | 'assistant', content }) so it can resolve
+  // follow-up questions ("what about the second one?" etc).
+  let chatHistory = [];
+
   // Only seed the canned backpropagation demo message for mock/demo courses;
   // a real backend course starts with a clean thread.
   if (!isRealCourse) {
     renderTutorMessage(thread, matchResponse('backpropagation'), false);
   }
 
-  root.querySelector('#tutor-form').addEventListener('submit', async (e) => {
+  function setBusy(busy) {
+    input.disabled = busy;
+    sendBtn.disabled = busy;
+  }
+
+  // Renders the user's message once, then sends it. Retry calls send()
+  // directly so the question isn't shown twice.
+  function ask(value) {
+    renderTutorMessage(thread, value, true);
+    send(value);
+  }
+
+  async function send(value) {
+    setBusy(true);
+    const loadingEl = renderChatLoading(thread, 'Sabilearn tutor is thinking');
+
+    if (isRealCourse) {
+      try {
+        const response = await fetchBackendTutorAnswer(courseId, value, chatHistory);
+        loadingEl.remove();
+        renderTutorMessage(thread, response, false);
+        chatHistory = chatHistory.concat([
+          { role: 'user', content: value },
+          { role: 'assistant', content: response.explanation },
+        ]);
+      } catch (err) {
+        console.warn('Sabilearn: AI Tutor backend call failed.', err);
+        loadingEl.remove();
+        renderChatError(thread, "The AI Tutor couldn't get an answer from the backend. Check that it's running and try again.", () => send(value));
+      }
+    } else {
+      const response = matchResponse(value);
+      loadingEl.remove();
+      renderTutorMessage(thread, response, false);
+    }
+    setBusy(false);
+    input.focus();
+  }
+
+  root.querySelector('#tutor-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    const input = root.querySelector('#tutor-input');
     const value = input.value.trim();
     if (!value) return;
-    renderTutorMessage(thread, value, true);
     input.value = '';
-    const response = await getTutorResponse(courseId, value);
-    renderTutorMessage(thread, response, false);
+    ask(value);
   });
 
-  thread.addEventListener('click', async (e) => {
+  thread.addEventListener('click', (e) => {
     const btn = e.target.closest('.quick-chip');
     if (!btn) return;
     if (btn.dataset.action === 'quiz' && quizLink) { window.location.href = quizLink; return; }
     if (btn.dataset.action === 'flashcards' && flashcardLink) { window.location.href = flashcardLink; return; }
     const labelMap = { simpler: 'Explain that more simply', example: 'Give me another example', deeper: 'Go deeper on this' };
     const label = labelMap[btn.dataset.action] || 'Tell me more';
-    renderTutorMessage(thread, label, true);
-    const response = await getTutorResponse(courseId, label);
-    renderTutorMessage(thread, response, false);
+    ask(label);
   });
 }

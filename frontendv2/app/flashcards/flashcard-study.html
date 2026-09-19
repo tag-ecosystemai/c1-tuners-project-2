@@ -29,6 +29,8 @@
 
 <script src="../../assets/js/include.js"></script>
 <script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/api-config.js"></script>
+<script src="../../assets/js/generated-content-store.js"></script>
 <script src="../../assets/js/flashcard-engine.js"></script>
 <script>
 document.addEventListener('sabilearn:shell-ready', async () => {
@@ -36,8 +38,27 @@ document.addEventListener('sabilearn:shell-ready', async () => {
   const deckId = params.get('deck') || 'neural-networks-deck';
   const courseParam = params.get('course');
 
-  const data = await fetch('../../data/mock/flashcards.json').then(r => r.json());
-  const deck = data.decks.find(d => d.id === deckId) || data.decks[0];
+  // Backend-generated decks (real course, real cards from POST
+  // /flashcards/) are cached locally since the backend has no endpoint to
+  // fetch a previously-generated deck back by id. Mock/demo decks keep
+  // loading straight from the local mock bank.
+  let deck = getGeneratedDeckById(deckId);
+  if (!deck) {
+    const data = await fetch('../../data/mock/flashcards.json').then(r => r.json());
+    deck = data.decks.find(d => d.id === deckId);
+  }
+  if (!deck) {
+    // Not a demo deck and no saved backend deck with this id — don't
+    // swap in some other deck.
+    sabilearnRenderPageError(document.getElementById('fc-root'), {
+      title: "We couldn't find this deck",
+      message: 'Generated decks are saved in this browser only. Generate it again to study it.',
+      onRetry: () => window.location.reload(),
+      backHref: courseParam ? `../courses/course.html?course=${courseParam}&tab=flashcards` : 'flashcards.html',
+      backLabel: 'Back to Flashcards',
+    });
+    return;
+  }
 
   const backLabel = courseParam ? `Back to ${deck.courseCode}` : 'Back to Flashcards';
   const backHref = courseParam ? `../courses/course.html?course=${courseParam}&tab=flashcards` : 'flashcards.html';

@@ -1,10 +1,10 @@
 // SABILEARN — Quiz Setup behavior
-// "Generate Quiz" now calls POST /quiz/ on the backend for real backend
-// courses (backend/app/routes/quiz.py). The backend returns generated
-// question data, but quiz-taking.html/quiz-engine.js only know how to play
-// back the local mock quiz format today, so "Start Quiz" still opens the
-// matching mock quiz — the generated backend quiz is logged to the console
-// for now until the taking screen is updated to consume it directly.
+// "Generate Quiz" calls POST /quiz/ on the backend for real backend courses
+// (backend/app/routes/quiz.py). The backend-generated quiz is normalized
+// (see generated-content-store.js) and cached locally, then "Start Quiz"
+// opens quiz-taking.html pointed at that real generated quiz — no mock
+// quiz is substituted for real backend courses. Mock/demo courses keep
+// using the local mock quiz bank exactly as before.
 
 const COURSE_QUIZ_MAP = {
   csc301: 'neural-networks-quiz',
@@ -29,18 +29,15 @@ document.addEventListener('sabilearn:shell-ready', async () => {
 
   // Real backend courses, so this page also works when arriving from a
   // course page backed by the FastAPI backend rather than a mock course.
-  let backendCourses = [];
-  try {
-    const res = await sabilearnFetch(`${window.SABILEARN_API_BASE}/courses/`, {}, 8000);
-    if (!res.ok) throw new Error(`Backend responded ${res.status}`);
-    const data = await res.json();
-    backendCourses = data.courses || [];
-  } catch (err) {
-    console.warn('Sabilearn: could not reach backend for course list.', err);
-  }
+  const backendCourses = await sabilearnGetBackendCourses();
+
+  // Default to the first real backend course when one exists, so the page
+  // favors real data over the mock/demo course list. A preset course from
+  // the URL (e.g. arriving from a course workspace) always wins.
+  const defaultCourse = presetCourse || (backendCourses.length ? String(backendCourses[0].id) : courses[0].id);
 
   const state = {
-    course: presetCourse || courses[0].id,
+    course: defaultCourse,
     source: presetMaterial ? 'material' : 'course',
     material: presetMaterial || null,
     topic: null,
@@ -50,9 +47,41 @@ document.addEventListener('sabilearn:shell-ready', async () => {
     focus: 'all',
   };
 
-  const mockOptions = courses.map((c) => `<option value="${c.id}" ${c.id === state.course ? 'selected' : ''}>${c.code} · ${c.title}</option>`).join('');
+  // Backend courses are listed first so the default selection above lines
+  // up with what's shown as selected in the dropdown.
   const backendOptions = backendCourses.map((c) => `<option value="${c.id}" ${String(c.id) === String(state.course) ? 'selected' : ''}>${c.code ? `${c.code} · ` : ''}${c.name}</option>`).join('');
-  document.getElementById('setup-course-select').innerHTML = mockOptions + backendOptions;
+  const mockOptions = courses.map((c) => `<option value="${c.id}" ${c.id === state.course ? 'selected' : ''}>${c.code} · ${c.title}</option>`).join('');
+  document.getElementById('setup-course-select').innerHTML = backendOptions + mockOptions;
+
+  // The backend's POST /quiz/ only accepts { course_id, topic,
+  // num_questions } (see backend/app/routes/quiz.py) — it has no concept
+  // of a specific material, difficulty, question type, or focus. For a
+  // backend course we hide those options instead of letting the learner
+  // configure something the generation call will silently ignore. Mock
+  // courses keep every option exactly as before.
+  function updateBackendOptionVisibility() {
+    const isBackend = typeof isBackendId === 'function' && isBackendId(state.course);
+
+    const materialChip = document.getElementById('source-chip-material');
+    materialChip.disabled = isBackend;
+    materialChip.classList.toggle('is-disabled', isBackend);
+    document.getElementById('material-not-supported-note').style.display = isBackend ? 'block' : 'none';
+    if (isBackend && state.source === 'material') {
+      state.source = 'course';
+      document.querySelectorAll('.source-chip').forEach((c) => c.classList.remove('is-selected'));
+      document.querySelector('.source-chip[data-source="course"]').classList.add('is-selected');
+    }
+
+    ['difficulty-section', 'types-section', 'focus-section'].forEach((sectionId) => {
+      document.getElementById(sectionId).querySelectorAll('.setup-chip').forEach((chip) => {
+        chip.disabled = isBackend;
+        chip.classList.toggle('is-disabled', isBackend);
+      });
+    });
+    document.getElementById('difficulty-not-supported-note').style.display = isBackend ? 'block' : 'none';
+    document.getElementById('types-not-supported-note').style.display = isBackend ? 'block' : 'none';
+    document.getElementById('focus-not-supported-note').style.display = isBackend ? 'block' : 'none';
+  }
 
   function currentCourse() {
     const mock = courses.find((c) => c.id === state.course);
@@ -96,6 +125,7 @@ document.addEventListener('sabilearn:shell-ready', async () => {
   document.getElementById('setup-course-select').addEventListener('change', (e) => {
     state.course = e.target.value;
     state.topic = null; state.material = null;
+    updateBackendOptionVisibility();
     renderSourceOptions();
   });
 
@@ -143,13 +173,33 @@ document.addEventListener('sabilearn:shell-ready', async () => {
     });
   });
 
-  document.getElementById('generate-quiz-btn').addEventListener('click', async () => {
+  function showSetupError(message, onRetry) {
+    const banner = document.getElementById('setup-error-banner');
+    banner.style.display = 'block';
+    banner.innerHTML = `
+      <div class="page-empty-state" style="padding:16px 0;">
+        <p style="color:var(--color-warn-text); font-size:13.5px; margin-bottom:10px;">${sabilearnEscapeHtml(message)}</p>
+        <button type="button" class="btn btn-secondary btn-sm" id="setup-error-retry">Retry</button>
+      </div>
+    `;
+    document.getElementById('setup-error-retry').addEventListener('click', onRetry);
+  }
+  function clearSetupError() {
+    const banner = document.getElementById('setup-error-banner');
+    banner.style.display = 'none';
+    banner.innerHTML = '';
+  }
+
+  async function generateQuiz() {
+    clearSetupError();
     const btn = document.getElementById('generate-quiz-btn');
     btn.textContent = 'Creating your quiz\u2026';
     btn.disabled = true;
 
-    let backendQuiz = null;
-    if (typeof isBackendId === 'function' && isBackendId(state.course)) {
+    const isRealCourse = typeof isBackendId === 'function' && isBackendId(state.course);
+    let generatedQuiz = null;
+
+    if (isRealCourse) {
       try {
         const res = await sabilearnFetch(`${window.SABILEARN_API_BASE}/quiz/`, {
           method: 'POST',
@@ -159,36 +209,66 @@ document.addEventListener('sabilearn:shell-ready', async () => {
             topic: state.source === 'topic' ? state.topic : null,
             num_questions: state.count,
           }),
-        });
+        }, 60000);
         if (!res.ok) throw new Error(`Backend responded ${res.status}`);
-        backendQuiz = await res.json();
-        console.info('Sabilearn: backend generated this quiz (not yet playable in quiz-taking.html):', backendQuiz);
+        const backendQuiz = await res.json();
+        const course = currentCourse();
+        generatedQuiz = normalizeBackendQuiz(backendQuiz, {
+          courseId: state.course,
+          courseCode: course.code,
+          courseTitle: course.title,
+          topic: state.source === 'topic' ? state.topic : (backendQuiz.topic || null),
+          difficulty: state.difficulty,
+        });
+        if (!generatedQuiz.questions.length) throw new Error('Backend returned no usable questions');
+        saveGeneratedQuiz(generatedQuiz);
       } catch (err) {
-        console.warn('Sabilearn: quiz generation backend call failed, using mock quiz for preview.', err);
+        console.warn('Sabilearn: quiz generation backend call failed.', err);
+        btn.textContent = '\u2726 Generate Quiz';
+        btn.disabled = false;
+        // Real backend course and the generation call failed — show an
+        // error with Retry. Never fall back to a mock quiz for a real course.
+        showSetupError("We couldn't generate a quiz from the backend right now.", generateQuiz);
+        return;
       }
     }
 
-    const quizData = await loadJSON('../../data/mock/quizzes.json');
-    const quizId = COURSE_QUIZ_MAP[state.course] || quizData.quizzes[0].id;
-    const quiz = quizData.quizzes.find((q) => q.id === quizId);
-    const topicLabel = backendQuiz?.topic || state.topic || quiz.topic;
+    let quiz = generatedQuiz;
+    if (!quiz) {
+      // Mock/demo course — keep the original local mock quiz bank.
+      const quizData = await loadJSON('../../data/mock/quizzes.json');
+      const quizId = COURSE_QUIZ_MAP[state.course] || quizData.quizzes[0].id;
+      quiz = quizData.quizzes.find((q) => q.id === quizId);
+    }
+    const topicLabel = quiz.topic;
 
     document.getElementById('setup-view').style.display = 'none';
     const previewView = document.getElementById('preview-view');
     previewView.style.display = 'block';
 
     const typeLabels = { mcq: 'Multiple Choice', tf: 'True/False', short: 'Short Answer' };
-    document.getElementById('preview-title-input').value = `${topicLabel} — Fundamentals`;
-    document.getElementById('preview-meta').textContent = `${state.count} questions · ${state.difficulty} · ${[...state.types].map((t) => typeLabels[t]).join(' + ')}`;
+    document.getElementById('preview-title-input').value = generatedQuiz ? quiz.title : `${topicLabel} — Fundamentals`;
+    // Difficulty/type chips are disabled (and ignored by the backend) for
+    // real backend courses, so the preview only claims what actually
+    // happened: the question count and topic.
+    document.getElementById('preview-meta').textContent = generatedQuiz
+      ? `${quiz.questions.length} question${quiz.questions.length === 1 ? '' : 's'} · ${topicLabel}`
+      : `${quiz.questions.length} question${quiz.questions.length === 1 ? '' : 's'} · ${state.difficulty} · ${[...state.types].map((t) => typeLabels[t]).join(' + ')}`;
     document.getElementById('preview-topics').innerHTML = `<span class="badge">${topicLabel}</span>` +
       currentCourse().topics.slice(0, 2).filter(t => t.name !== topicLabel).map((t) => `<span class="badge">${t.name}</span>`).join('');
     document.getElementById('preview-estimate').textContent = document.getElementById('estimate-text').textContent;
 
+    btn.textContent = '\u2726 Generate Quiz';
+    btn.disabled = false;
+
     document.getElementById('start-quiz-btn').onclick = () => {
       window.location.href = `quiz-taking.html?quiz=${quiz.id}&course=${state.course}`;
     };
-  });
+  }
 
+  document.getElementById('generate-quiz-btn').addEventListener('click', generateQuiz);
+
+  updateBackendOptionVisibility();
   renderSourceOptions();
   updateEstimate();
 });

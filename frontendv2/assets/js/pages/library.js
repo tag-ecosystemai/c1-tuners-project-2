@@ -1,10 +1,9 @@
 // SABILEARN — Library behavior
-// The upload dropdown and the actual upload call are wired to the backend
-// (GET /courses/ and POST /materials/upload — backend/app/routes/). Folder
-// cards and material browsing on this page keep using the local mock data,
-// since the backend has no endpoints yet for material size/thumbnails or
-// for the richer course metadata (instructor, color, materials count)
-// shown here.
+// Folder cards and the material grid now include real backend courses
+// (GET /courses/) and their real materials (GET /materials/course/:id),
+// merged with the local mock/demo courses and materials. The backend has
+// no endpoints yet for material size/thumbnails, so those fields show a
+// neutral placeholder for real materials instead of being invented.
 
 const MATERIAL_ICONS = {
   document: '\u{1F4C4}',
@@ -22,11 +21,53 @@ const FILTER_TYPE_MAP = {
 };
 
 let allMaterialsFlat = [];
-let backendCourses = []; // populated from GET /courses/, used for the upload dropdown
+let backendCourses = []; // populated from GET /courses/, used for the upload dropdown and merged folders/materials
 
 async function loadJSON(path) {
   const res = await fetch(path);
   return res.json();
+}
+
+function guessMaterialType(fileType) {
+  const t = (fileType || '').toLowerCase();
+  if (t.includes('presentation') || t.includes('powerpoint')) return 'slides';
+  if (t.includes('audio')) return 'recording';
+  if (t.includes('image')) return 'image';
+  return 'document';
+}
+
+// Loads every real backend course's materials (GET /materials/course/:id)
+// and shapes both courses and materials into the same fields the rest of
+// this page already renders for mock courses/materials.
+async function loadBackendFoldersAndMaterials(courses) {
+  const results = await Promise.all(courses.map(async (c) => {
+    let backendMaterials = [];
+    try {
+      const res = await sabilearnFetch(`${window.SABILEARN_API_BASE}/materials/course/${c.id}`, {}, 8000);
+      if (res.ok) {
+        const data = await res.json();
+        backendMaterials = data.materials || [];
+      }
+    } catch (err) {
+      console.warn('Sabilearn: could not load materials for course', c.id, err);
+    }
+    const materials = backendMaterials.map((m) => ({
+      id: String(m.id),
+      courseId: String(c.id),
+      courseCode: c.code || 'COURSE',
+      title: m.filename,
+      ext: (m.filename.split('.').pop() || '').toUpperCase(),
+      size: '—',
+      date: m.uploaded_at ? new Date(m.uploaded_at).toLocaleDateString() : '',
+      type: guessMaterialType(m.file_type),
+      isNew: false,
+    }));
+    return { course: sabilearnBackendCourseToUi(c, materials.length), materials };
+  }));
+  return {
+    folders: results.map((r) => r.course),
+    materials: results.flatMap((r) => r.materials),
+  };
 }
 
 function renderFolders(courses) {
@@ -41,7 +82,7 @@ function renderFolders(courses) {
       <h4>${c.title}</h4>
       <div class="instructor">${c.instructor}</div>
       <div class="folder-card-footer">
-        <a href="#" class="open-folder">Open folder</a>
+        <a href="../courses/course.html?course=${c.id}&tab=materials" class="open-folder">Open folder</a>
         <a href="../courses/course.html?course=${c.id}&tab=materials" class="card-link">View materials →</a>
       </div>
     </div>
@@ -72,29 +113,26 @@ document.addEventListener('sabilearn:shell-ready', async () => {
     loadJSON('../../data/mock/materials.json'),
   ]);
 
-  renderFolders(courseData.courses);
-  document.getElementById('course-count').textContent = `${courseData.courses.length} courses`;
-
   // Populate the upload dropdown from the real backend so uploads land on
   // actual courses; fall back to the mock course list if the backend isn't
   // reachable.
   const uploadSelect = document.getElementById('upload-course-select');
-  try {
-    const res = await sabilearnFetch(`${window.SABILEARN_API_BASE}/courses/`, {}, 8000);
-    if (!res.ok) throw new Error(`Backend responded ${res.status}`);
-    const data = await res.json();
-    backendCourses = data.courses || [];
-  } catch (err) {
-    console.warn('Sabilearn: could not reach backend for course list, using mock courses in the upload dropdown.', err);
-  }
+  backendCourses = await sabilearnGetBackendCourses();
   uploadSelect.innerHTML = backendCourses.length
     ? backendCourses.map((c) => `<option value="${c.id}">${c.code ? `${c.code} · ` : ''}${c.name}</option>`).join('')
     : courseData.courses.map((c) => `<option value="${c.id}">${c.code} · ${c.title}</option>`).join('');
 
+  const { folders: backendFolders, materials: backendMaterials } = await loadBackendFoldersAndMaterials(backendCourses);
+  const allFolders = courseData.courses.concat(backendFolders);
+
+  renderFolders(allFolders);
+  document.getElementById('course-count').textContent = `${allFolders.length} course${allFolders.length === 1 ? '' : 's'}`;
+
   const courseLookup = Object.fromEntries(courseData.courses.map((c) => [c.id, c]));
-  allMaterialsFlat = Object.entries(materialsData).flatMap(([courseId, items]) =>
+  const mockMaterialsFlat = Object.entries(materialsData).flatMap(([courseId, items]) =>
     items.map((m) => ({ ...m, courseId, courseCode: courseLookup[courseId]?.code }))
   );
+  allMaterialsFlat = mockMaterialsFlat.concat(backendMaterials);
   allMaterialsFlat.sort((a, b) => (a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1));
 
   renderMaterials(allMaterialsFlat);
@@ -124,7 +162,10 @@ function wireUploadModal() {
   const dropzone = document.getElementById('upload-dropzone');
   const filesListEl = document.getElementById('selected-files-list');
   const uploadStartBtn = document.getElementById('upload-start');
+  const processingListEl = document.getElementById('processing-files-list');
   let selectedFiles = [];
+  let currentCourseId = null;
+  let currentUseBackend = false;
 
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
@@ -186,17 +227,94 @@ function wireUploadModal() {
   document.getElementById('upload-background')?.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
+  // After any successful backend upload (initial pass or retry), re-pull
+  // this course's materials so the grid reflects it without a full reload.
+  async function refreshAfterBackendUpload() {
+    const { folders, materials } = await loadBackendFoldersAndMaterials(backendCourses);
+    const courseData = await loadJSON('../../data/mock/courses.json');
+    renderFolders(courseData.courses.concat(folders));
+    const courseLookup = Object.fromEntries(courseData.courses.map((c) => [c.id, c]));
+    const mockMaterialsFlat = (await loadJSON('../../data/mock/materials.json'));
+    const mockFlat = Object.entries(mockMaterialsFlat).flatMap(([cid, items]) =>
+      items.map((m) => ({ ...m, courseId: cid, courseCode: courseLookup[cid]?.code }))
+    );
+    allMaterialsFlat = mockFlat.concat(materials);
+    renderMaterials(allMaterialsFlat);
+  }
+
+  // Uploads one already-picked file to the real backend and reflects the
+  // result in its row. Reused by the initial pass and by Retry.
+  // backend/app/routes/materials.py can return HTTP 200 with just a
+  // failure message and no "material" key (e.g. course not found), so
+  // success is decided by the presence of that key, not res.ok alone.
+  async function uploadOneFile(i) {
+    const f = selectedFiles[i];
+    const statusEl = document.getElementById(`proc-status-${i}`);
+    const iconEl = document.getElementById(`proc-icon-${i}`);
+    statusEl.textContent = 'Uploading…';
+    statusEl.style.color = '';
+    iconEl.textContent = '⟳';
+    try {
+      const formData = new FormData();
+      formData.append('course_id', currentCourseId);
+      formData.append('file', f);
+      const res = await sabilearnFetch(`${window.SABILEARN_API_BASE}/materials/upload`, {
+        method: 'POST',
+        body: formData,
+      }, 30000);
+      if (!res.ok) throw new Error(`Backend responded ${res.status}`);
+      const data = await res.json();
+      if (!data || !data.material) throw new Error(data?.message || 'Backend did not return an uploaded material');
+      statusEl.textContent = 'Ready';
+      iconEl.textContent = '✓';
+      return true;
+    } catch (err) {
+      console.warn('Sabilearn: material upload failed.', err);
+      statusEl.textContent = "We couldn't process this material";
+      statusEl.style.color = 'var(--color-warn-text)';
+      iconEl.innerHTML = `<button class="btn btn-secondary btn-sm" data-retry="${i}">Retry</button>`;
+      return false;
+    }
+  }
+
+  // Retries one file from the original simulated mock/demo flow — same
+  // "processing" animation, ending in Ready, so mock upload retry works
+  // the same way it always visually promised to (previously unwired).
+  function retrySimulatedFile(i) {
+    const statusEl = document.getElementById(`proc-status-${i}`);
+    const iconEl = document.getElementById(`proc-icon-${i}`);
+    const stages = ['Reading your material', 'Preparing content', 'Making it searchable', 'Ready'];
+    iconEl.textContent = '⟳';
+    statusEl.style.color = '';
+    stages.forEach((stage, si) => {
+      setTimeout(() => {
+        statusEl.textContent = stage;
+        if (stage === 'Ready') iconEl.textContent = '✓';
+      }, (si + 1) * 400);
+    });
+  }
+
+  // Delegated once — the processing list's innerHTML gets replaced on
+  // every upload run, so a per-run listener would leak/duplicate.
+  processingListEl?.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-retry]');
+    if (!btn) return;
+    const i = Number(btn.dataset.retry);
+    if (!currentUseBackend) { retrySimulatedFile(i); return; }
+    const ok = await uploadOneFile(i);
+    if (ok) await refreshAfterBackendUpload();
+  });
+
   uploadStartBtn.addEventListener('click', async () => {
     if (selectedFiles.length === 0) return;
 
-    const courseId = document.getElementById('upload-course-select').value;
-    const useBackend = backendCourses.some((c) => String(c.id) === String(courseId));
+    currentCourseId = document.getElementById('upload-course-select').value;
+    currentUseBackend = backendCourses.some((c) => String(c.id) === String(currentCourseId));
 
     selectStep.style.display = 'none';
     processingStep.classList.add('is-active');
 
-    const listEl = document.getElementById('processing-files-list');
-    listEl.innerHTML = selectedFiles.map((f, i) => `
+    processingListEl.innerHTML = selectedFiles.map((f, i) => `
       <div class="list-item-card" style="padding:14px 16px; margin-bottom:8px;" id="proc-file-${i}">
         <div>
           <div class="list-item-title" style="font-size:13.5px;">${f.name}</div>
@@ -206,7 +324,7 @@ function wireUploadModal() {
       </div>
     `).join('');
 
-    if (!useBackend) {
+    if (!currentUseBackend) {
       // No real backend course selected (mock demo course) — keep the
       // original simulated upload flow.
       const stages = ['Reading your material', 'Preparing content', 'Making it searchable', 'Ready'];
@@ -235,30 +353,13 @@ function wireUploadModal() {
     }
 
     // Real backend course selected — actually upload each file.
+    let anySucceeded = false;
     for (let i = 0; i < selectedFiles.length; i++) {
-      const f = selectedFiles[i];
-      const statusEl = document.getElementById(`proc-status-${i}`);
-      const iconEl = document.getElementById(`proc-icon-${i}`);
-      try {
-        const formData = new FormData();
-        formData.append('course_id', courseId);
-        formData.append('file', f);
-        const res = await sabilearnFetch(`${window.SABILEARN_API_BASE}/materials/upload`, {
-          method: 'POST',
-          body: formData,
-        });
-        if (!res.ok) throw new Error(`Backend responded ${res.status}`);
-        await res.json();
-        statusEl.textContent = 'Ready';
-        iconEl.textContent = '✓';
-      } catch (err) {
-        console.warn('Sabilearn: material upload failed.', err);
-        statusEl.textContent = "We couldn't process this material";
-        statusEl.style.color = 'var(--color-warn-text)';
-        iconEl.innerHTML = `<button class="btn btn-secondary btn-sm" data-retry="${i}">Retry</button>`;
-      }
+      const ok = await uploadOneFile(i);
+      if (ok) anySucceeded = true;
     }
     doneBtn.style.display = 'inline-flex';
+    if (anySucceeded) await refreshAfterBackendUpload();
   });
 
   doneBtn.addEventListener('click', closeModal);

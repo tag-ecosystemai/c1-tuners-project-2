@@ -30,6 +30,8 @@
 
 <script src="../../assets/js/include.js"></script>
 <script src="../../assets/js/dialogs.js"></script>
+<script src="../../assets/js/api-config.js"></script>
+<script src="../../assets/js/generated-content-store.js"></script>
 <script src="../../assets/js/quiz-engine.js"></script>
 <script>
 document.addEventListener('sabilearn:shell-ready', async () => {
@@ -37,13 +39,50 @@ document.addEventListener('sabilearn:shell-ready', async () => {
   const quizId = params.get('quiz') || 'neural-networks-quiz';
   const courseParam = params.get('course');
 
-  const data = await fetch('../../data/mock/quizzes.json').then(r => r.json());
-  const quiz = data.quizzes.find(q => q.id === quizId) || data.quizzes[0];
+  // Backend-generated quizzes (real course, real questions from POST
+  // /quiz/) are cached locally by quiz-setup.js since the backend has no
+  // endpoint to fetch a previously-generated quiz back by id. Mock/demo
+  // quizzes keep loading straight from the local mock bank.
+  let quiz = getGeneratedQuizById(quizId);
+  if (!quiz) {
+    const data = await fetch('../../data/mock/quizzes.json').then(r => r.json());
+    quiz = data.quizzes.find(q => q.id === quizId);
+  }
+  if (!quiz) {
+    // Not a demo quiz and no saved backend quiz with this id — don't
+    // swap in some other quiz.
+    sabilearnRenderPageError(document.getElementById('quiz-root'), {
+      title: "We couldn't find this quiz",
+      message: 'Generated quizzes are saved in this browser only. Generate it again to take it.',
+      onRetry: () => window.location.reload(),
+      backHref: courseParam ? `quiz-setup.html?course=${courseParam}` : 'quiz-setup.html',
+      backLabel: 'Generate a quiz',
+    });
+    return;
+  }
 
   const backLabel = courseParam ? `Back to ${quiz.courseCode}` : 'Back to Quizzes';
   const backHref = courseParam ? `../courses/course.html?course=${courseParam}&tab=quizzes` : 'quizzes.html';
 
-  initQuizTaking(document.getElementById('quiz-root'), quiz, { backLabel, backHref });
+  initQuizTaking(document.getElementById('quiz-root'), quiz, {
+    backLabel,
+    backHref,
+    onFinish: (score, total) => {
+      // Record the learner's real result against this real (backend or
+      // mock) quiz, so Quizzes → History reflects what actually happened
+      // instead of only the seeded mock history.
+      saveQuizAttempt({
+        quizId: quiz.id,
+        courseId: courseParam || quiz.courseId,
+        courseCode: quiz.courseCode,
+        title: quiz.title,
+        status: 'completed',
+        score,
+        total,
+        source: quiz.source || 'mock',
+      });
+    },
+  });
 });
 </script>
 </body>

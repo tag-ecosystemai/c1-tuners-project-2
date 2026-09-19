@@ -1,4 +1,11 @@
 // SABILEARN — Global Quizzes hub behavior
+// Merges real backend courses (GET /courses/), quizzes actually generated
+// from them (POST /quiz/, cached locally — see generated-content-store.js)
+// and real completed attempts (recorded by quiz-taking.html) with the
+// mock/demo quizzes and history, so the hub is real wherever the backend
+// has been used, without losing the demo content otherwise. There is no
+// backend concept of an "in-progress" quiz (partway through, not
+// finished), so that section stays mock-only.
 
 async function loadJSON(path) {
   const res = await fetch(path);
@@ -6,14 +13,29 @@ async function loadJSON(path) {
 }
 
 document.addEventListener('sabilearn:shell-ready', async () => {
-  const [{ quizzes, history }, { courses }] = await Promise.all([
+  const [{ quizzes: mockQuizzes, history: mockHistory }, { courses: mockCourses }, backendCourses] = await Promise.all([
     loadJSON('../../data/mock/quizzes.json'),
     loadJSON('../../data/mock/courses.json'),
+    sabilearnGetBackendCourses(),
   ]);
-  const quizLookup = Object.fromEntries(quizzes.map((q) => [q.id, q]));
-  const courseLookup = Object.fromEntries(courses.map((c) => [c.id, c]));
 
-  const inProgress = history.filter((h) => h.status === 'in-progress');
+  const generatedQuizzes = backendCourses.flatMap((c) => getGeneratedQuizzes(c.id));
+  const quizzes = mockQuizzes.concat(generatedQuizzes);
+
+  // Real attempts are stored most-recent-first; number them 1..N per quiz
+  // in chronological order so "Attempt 1/2/3" reads naturally.
+  const realHistoryChrono = getQuizHistory().slice().reverse();
+  const attemptCounters = {};
+  const realHistory = realHistoryChrono.map((h) => {
+    attemptCounters[h.quizId] = (attemptCounters[h.quizId] || 0) + 1;
+    return { ...h, attempt: attemptCounters[h.quizId] };
+  });
+  const history = mockHistory.concat(realHistory);
+  const courses = mockCourses.concat(backendCourses.map((c) => sabilearnBackendCourseToUi(c)));
+
+  const quizLookup = Object.fromEntries(quizzes.map((q) => [q.id, q]));
+
+  const inProgress = mockHistory.filter((h) => h.status === 'in-progress');
   const completed = history.filter((h) => h.status === 'completed');
 
   // Group completed attempts by quiz for the Recent section (show latest per quiz)
@@ -38,7 +60,7 @@ document.addEventListener('sabilearn:shell-ready', async () => {
   }).join('') : `<p style="color:var(--color-text-faint); font-size:14px;">No quizzes in progress.</p>`;
 
   const recentWrap = document.getElementById('recent-quizzes');
-  recentWrap.innerHTML = recentList.map((h) => {
+  recentWrap.innerHTML = recentList.length ? recentList.map((h) => {
     const title = h.title || quizLookup[h.quizId]?.title;
     const courseCode = h.courseCode || quizLookup[h.quizId]?.courseCode;
     const courseId = h.courseId || quizLookup[h.quizId]?.courseId;
@@ -51,7 +73,7 @@ document.addEventListener('sabilearn:shell-ready', async () => {
         <span class="quiz-score-pill">${h.score}/${h.total}</span>
       </a>
     `;
-  }).join('');
+  }).join('') : `<p style="color:var(--color-text-faint); font-size:14px;">No quizzes taken yet.</p>`;
 
   // ---- Quiz History (with multi-attempt tracking) ----
   const byQuiz = {};

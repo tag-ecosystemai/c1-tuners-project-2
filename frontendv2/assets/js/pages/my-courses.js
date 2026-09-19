@@ -1,12 +1,39 @@
 // SABILEARN — My Courses list behavior
+// Merges real backend courses (GET /courses/, materials count from GET
+// /materials/course/:id) with the local mock/demo courses, so this page
+// reflects whatever courses actually exist on the backend instead of only
+// the seeded demo set. Archiving stays a local (sessionStorage) UI concept
+// for both, since the backend has no archived/active flag.
 
 async function loadJSON(path) {
   const res = await fetch(path);
   return res.json();
 }
 
+async function loadBackendCourses() {
+  const backendCourses = await sabilearnGetBackendCourses();
+  return Promise.all(backendCourses.map(async (c) => {
+    let materialsCount = 0;
+    try {
+      const res = await sabilearnFetch(`${window.SABILEARN_API_BASE}/materials/course/${c.id}`, {}, 8000);
+      if (res.ok) {
+        const data = await res.json();
+        materialsCount = (data.materials || []).length;
+      }
+    } catch (err) {
+      console.warn('Sabilearn: could not load materials count for course', c.id, err);
+    }
+    return sabilearnBackendCourseToUi(c, materialsCount);
+  }));
+}
+
 document.addEventListener('sabilearn:shell-ready', async () => {
-  const { courses } = await loadJSON('../../data/mock/courses.json');
+  const [{ courses: mockCourses }, backendCourses] = await Promise.all([
+    loadJSON('../../data/mock/courses.json'),
+    loadBackendCourses(),
+  ]);
+  const courses = mockCourses.concat(backendCourses);
+
   const archivedIds = JSON.parse(sessionStorage.getItem('archivedCourses') || '[]');
   const activeCourses = courses.filter((c) => !archivedIds.includes(c.id));
   const archivedCourses = courses.filter((c) => archivedIds.includes(c.id));

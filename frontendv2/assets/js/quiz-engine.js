@@ -100,12 +100,19 @@ function initQuizTaking(root, quiz, { backLabel, backHref, onFinish }) {
     const pct = Math.round((state.score / total) * 100);
     const missed = quiz.questions.filter((q, i) => !state.answers[i].correct);
     const weakEnough = pct < 80;
+    // The backend has no per-topic mastery analysis today, so the canned
+    // "AI Insight" / "You did well in" / "Room to improve" copy below is
+    // fabricated, not a real read of the learner's performance. Only show
+    // it for mock/demo quizzes; backend quizzes show the real score and
+    // real missed questions and nothing invented on top of them.
+    const isBackendQuiz = quiz.source === 'backend';
 
     document.getElementById('quiz-question-area').innerHTML = `
       <div class="card quiz-results-card">
         <div class="quiz-results-score">${state.score}/${total}</div>
         <p class="quiz-results-pct">${pct}% correct</p>
 
+        ${isBackendQuiz ? '' : `
         <div class="quiz-results-section">
           <h4>AI Insight</h4>
           <p style="font-size:14px; color:var(--color-text-muted);">
@@ -125,6 +132,7 @@ function initQuizTaking(root, quiz, { backLabel, backHref, onFinish }) {
             <p style="font-size:13.5px; color:var(--color-text-muted);">${weakEnough ? quiz.topic : 'Nothing major — keep practicing to maintain this'}</p>
           </div>
         </div>
+        `}
 
         ${missed.length ? `
           <div class="quiz-results-section">
@@ -133,7 +141,7 @@ function initQuizTaking(root, quiz, { backLabel, backHref, onFinish }) {
           </div>
         ` : `<p class="quiz-results-perfect">Perfect score — great work on ${quiz.topic}.</p>`}
 
-        ${weakEnough ? `
+        ${(weakEnough && !isBackendQuiz) ? `
           <div class="recommended-card" style="text-align:left;">
             <span class="eyebrow">✦ Recommended for you</span>
             <h4 style="margin-top:10px;">Review ${quiz.topic}</h4>

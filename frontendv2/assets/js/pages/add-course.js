@@ -4,6 +4,10 @@
 // still collected in the UI but is not sent or persisted anywhere yet.
 // "code" IS a real backend field (shown as the course badge throughout the
 // app, e.g. "CSC 301") and is sent below.
+//
+// If the backend can't save the course, this page says so and stays on the
+// form. It never shows the "course is ready" screen for a course that
+// wasn't actually created.
 
 async function loadJSON(path) {
   const res = await fetch(path);
@@ -11,21 +15,43 @@ async function loadJSON(path) {
 }
 
 document.addEventListener('sabilearn:shell-ready', async () => {
-  const { courses } = await loadJSON('../../data/mock/courses.json');
-  const existingNames = courses.map((c) => c.title.toLowerCase());
+  // Duplicate check covers the demo courses and the real backend courses.
+  const [{ courses }, backendCourses] = await Promise.all([
+    loadJSON('../../data/mock/courses.json'),
+    sabilearnGetBackendCourses(),
+  ]);
+  const existingNames = courses.map((c) => c.title.toLowerCase())
+    .concat(backendCourses.map((c) => String(c.name || '').toLowerCase()));
 
   const form = document.getElementById('add-course-form-el');
   const nameInput = document.getElementById('new-course-name');
   const codeInput = document.getElementById('new-course-code');
   const descInput = document.getElementById('new-course-desc');
   const duplicateWarning = document.getElementById('duplicate-warning');
+  const submitBtn = form.querySelector('.auth-submit');
+
+  // Inline error shown above the submit button when the save fails.
+  const errorEl = document.createElement('div');
+  errorEl.className = 'tutor-error-card';
+  errorEl.style.display = 'none';
+  submitBtn.parentNode.insertBefore(errorEl, submitBtn);
+
+  function showError(message) {
+    errorEl.textContent = `⚠ ${message}`;
+    errorEl.style.display = 'block';
+  }
+  function clearError() {
+    errorEl.style.display = 'none';
+  }
 
   nameInput.addEventListener('input', () => {
     duplicateWarning.classList.remove('is-visible');
+    clearError();
   });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    clearError();
     const name = nameInput.value.trim();
     if (!name) return;
 
@@ -34,9 +60,8 @@ document.addEventListener('sabilearn:shell-ready', async () => {
       return;
     }
 
-    const btn = form.querySelector('.auth-submit');
-    btn.textContent = 'Creating your course\u2026';
-    btn.disabled = true;
+    submitBtn.textContent = 'Creating your course\u2026';
+    submitBtn.disabled = true;
 
     let createdId = null;
     try {
@@ -52,10 +77,13 @@ document.addEventListener('sabilearn:shell-ready', async () => {
       if (!res.ok) throw new Error(`Backend responded ${res.status}`);
       const data = await res.json();
       createdId = data.course?.id ?? null;
+      if (createdId === null) throw new Error('Backend did not return the created course');
     } catch (err) {
-      // Backend isn't reachable — the course wasn't actually saved, but we
-      // still show the "ready" screen so the flow keeps working offline.
-      console.warn('Sabilearn: could not reach backend, course was not saved.', err);
+      console.warn('Sabilearn: course was not saved.', err);
+      submitBtn.textContent = 'Create Course';
+      submitBtn.disabled = false;
+      showError("We couldn't create this course. Check that the backend is running and try again.");
+      return;
     }
 
     document.getElementById('create-course-view').style.display = 'none';
@@ -63,13 +91,11 @@ document.addEventListener('sabilearn:shell-ready', async () => {
     readyView.style.display = 'block';
     document.getElementById('ready-course-name').textContent = name;
 
-    // Point the follow-up actions at the real course when we have one;
-    // otherwise fall back to the old hardcoded demo course.
-    const targetId = createdId ?? 'csc301';
+    // Point the follow-up actions at the course that was just created.
     const addMaterialLink = readyView.querySelector('a.btn-primary');
     const exploreLink = readyView.querySelector('a.btn-secondary');
-    if (addMaterialLink) addMaterialLink.href = `course.html?course=${targetId}&tab=materials`;
-    if (exploreLink) exploreLink.href = `course.html?course=${targetId}`;
+    if (addMaterialLink) addMaterialLink.href = `course.html?course=${createdId}&tab=materials`;
+    if (exploreLink) exploreLink.href = `course.html?course=${createdId}`;
   });
 
   document.getElementById('use-existing-btn')?.addEventListener('click', () => {
